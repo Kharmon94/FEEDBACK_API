@@ -30,6 +30,9 @@ RUN bundle lock --add-platform ruby && bundle install && \
 # Copy application code
 COPY . .
 
+# Ensure bin scripts are executable (Git on Windows may not preserve execute bit)
+RUN chmod +x bin/docker-entrypoint bin/rails bin/rake bin/setup
+
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
