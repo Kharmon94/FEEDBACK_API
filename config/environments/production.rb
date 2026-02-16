@@ -55,11 +55,8 @@ Rails.application.configure do
   # want to log everything, set the level to "debug".
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
-  config.cache_store = if ENV["REDIS_URL"].present?
-    [:redis_cache_store, { url: ENV["REDIS_URL"] }]
-  else
-    :solid_cache_store
-  end
+  # Use Solid Cache (no Redis required). Unset REDIS_URL on Railway if set.
+  config.cache_store = :solid_cache_store
   config.active_job.queue_adapter = :solid_queue
 
   config.action_mailer.perform_caching = false

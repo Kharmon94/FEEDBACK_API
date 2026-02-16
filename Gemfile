@@ -10,7 +10,6 @@ gem "puma", ">= 5.0"
 
 group :production do
   gem "pg"
-  gem "redis", ">= 4.0.1"
 end
 
 gem "tzinfo-data", platforms: %i[ windows jruby ]

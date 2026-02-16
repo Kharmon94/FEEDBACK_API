@@ -5,10 +5,4 @@ test:
   adapter: test
 
 production:
-  <% if ENV["REDIS_URL"].present? %>
-  adapter: redis
-  url: <%= ENV["REDIS_URL"] %>
-  channel_prefix: feedback_api_production
-  <% else %>
   adapter: solid_cable
-  <% end %>
