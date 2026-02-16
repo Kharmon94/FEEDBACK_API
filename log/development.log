@@ -1,0 +1,318 @@
+  [1m[35m (24.2ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (4.3ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (3.9ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (7.0ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-02-15 23:34:31.411942', '2026-02-15 23:34:31.411947') RETURNING "key"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (3.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateUsers (20250215000001)
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (3.8ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "encrypted_password" varchar NOT NULL, "name" varchar, "business_name" varchar, "plan" varchar DEFAULT 'free', "admin" boolean DEFAULT 0, "suspended" boolean DEFAULT 0, "provider" varchar, "uid" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20250215000001') RETURNING "version"[0m
+  [1m[36mTRANSACTION (31.6ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+Migrating to CreateLocations (20250215000002)
+  [1m[36mTRANSACTION (9.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (15.6ms)[0m  [1m[35mCREATE TABLE "locations" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "name" varchar NOT NULL, "slug" varchar, "review_platforms" json DEFAULT '{}', "logo_url" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_5e107925c6"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+)[0m
+  [1m[35m (2.4ms)[0m  [1m[35mCREATE INDEX "index_locations_on_user_id" ON "locations" ("user_id")[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_locations_on_slug" ON "locations" ("slug")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.7ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20250215000002') RETURNING "version"[0m
+  [1m[36mTRANSACTION (11.9ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+Migrating to CreateFeedbackSubmissions (20250215000003)
+  [1m[36mTRANSACTION (12.1ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (14.8ms)[0m  [1m[35mCREATE TABLE "feedback_submissions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "location_id" integer NOT NULL, "rating" integer NOT NULL, "comment" text, "customer_name" varchar, "customer_email" varchar, "phone_number" varchar, "contact_me" boolean DEFAULT 0, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_207a7ded81"
+FOREIGN KEY ("location_id")
+  REFERENCES "locations" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_feedback_submissions_on_location_id" ON "feedback_submissions" ("location_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20250215000003') RETURNING "version"[0m
+  [1m[36mTRANSACTION (14.7ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+Migrating to CreateSuggestions (20250215000004)
+  [1m[36mTRANSACTION (4.2ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (8.2ms)[0m  [1m[35mCREATE TABLE "suggestions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "location_id" integer, "content" text NOT NULL, "submitter_email" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_e9ef2171a7"
+FOREIGN KEY ("location_id")
+  REFERENCES "locations" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_suggestions_on_location_id" ON "suggestions" ("location_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20250215000004') RETURNING "version"[0m
+  [1m[36mTRANSACTION (6.7ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+Migrating to AddDeviseColumnsToUsers (20250215000005)
+  [1m[36mTRANSACTION (3.9ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (6.3ms)[0m  [1m[35mALTER TABLE "users" ADD "reset_password_token" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "users" ADD "reset_password_sent_at" datetime(6)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mALTER TABLE "users" ADD "remember_created_at" datetime(6)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20250215000005') RETURNING "version"[0m
+  [1m[36mTRANSACTION (5.1ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (70.7ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (4.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateActiveStorageTables (20260215235137)
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (4.9ms)[0m  [1m[35mCREATE TABLE "active_storage_blobs" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "key" varchar NOT NULL, "filename" varchar NOT NULL, "content_type" varchar, "metadata" text, "service_name" varchar NOT NULL, "byte_size" bigint NOT NULL, "checksum" varchar, "created_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_active_storage_blobs_on_key" ON "active_storage_blobs" ("key")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "active_storage_attachments" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "record_type" varchar NOT NULL, "record_id" bigint NOT NULL, "blob_id" bigint NOT NULL, "created_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_c3b3935057"
+FOREIGN KEY ("blob_id")
+  REFERENCES "active_storage_blobs" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_active_storage_attachments_on_blob_id" ON "active_storage_attachments" ("blob_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_active_storage_attachments_uniqueness" ON "active_storage_attachments" ("record_type", "record_id", "name", "blob_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "active_storage_variant_records" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "blob_id" bigint NOT NULL, "variation_digest" varchar NOT NULL, CONSTRAINT "fk_rails_993965df05"
+FOREIGN KEY ("blob_id")
+  REFERENCES "active_storage_blobs" ("id")
+)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_active_storage_variant_records_uniqueness" ON "active_storage_variant_records" ("blob_id", "variation_digest")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260215235137') RETURNING "version"[0m
+  [1m[36mTRANSACTION (82.9ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started POST "/api/v1/auth/sign_up" for 127.0.0.1 at 2026-02-15 19:21:50 -0500
+  [1m[36mActiveRecord::SchemaMigration Load (24.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+OmniAuth::NoSessionError (You must provide a session to use OmniAuth.):
+  
+omniauth (2.1.4) lib/omniauth/strategy.rb:180:in `call!'
+omniauth (2.1.4) lib/omniauth/strategy.rb:169:in `call'
+omniauth (2.1.4) lib/omniauth/builder.rb:48:in `call'
+warden (1.2.9) lib/warden/manager.rb:36:in `block in call'
+warden (1.2.9) lib/warden/manager.rb:34:in `catch'
+warden (1.2.9) lib/warden/manager.rb:34:in `call'
+rack (3.2.4) lib/rack/etag.rb:29:in `call'
+rack (3.2.4) lib/rack/conditional_get.rb:44:in `call'
+rack (3.2.4) lib/rack/head.rb:15:in `call'
+activerecord (8.0.3) lib/active_record/migration.rb:670:in `call'
+actionpack (8.0.3) lib/action_dispatch/middleware/callbacks.rb:31:in `block in call'
+activesupport (8.0.3) lib/active_support/callbacks.rb:100:in `run_callbacks'
+actionpack (8.0.3) lib/action_dispatch/middleware/callbacks.rb:30:in `call'
+actionpack (8.0.3) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (8.0.3) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in `call'
+actionpack (8.0.3) lib/action_dispatch/middleware/debug_exceptions.rb:31:in `call'
+actionpack (8.0.3) lib/action_dispatch/middleware/show_exceptions.rb:32:in `call'
+railties (8.0.3) lib/rails/rack/logger.rb:41:in `call_app'
+railties (8.0.3) lib/rails/rack/logger.rb:29:in `call'
+actionpack (8.0.3) lib/action_dispatch/middleware/remote_ip.rb:96:in `call'
+actionpack (8.0.3) lib/action_dispatch/middleware/request_id.rb:34:in `call'
+rack (3.2.4) lib/rack/runtime.rb:24:in `call'
+activesupport (8.0.3) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (8.0.3) lib/action_dispatch/middleware/server_timing.rb:61:in `block in call'
+actionpack (8.0.3) lib/action_dispatch/middleware/server_timing.rb:26:in `collect_events'
+actionpack (8.0.3) lib/action_dispatch/middleware/server_timing.rb:60:in `call'
+actionpack (8.0.3) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (8.0.3) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.2.4) lib/rack/sendfile.rb:131:in `call'
+actionpack (8.0.3) lib/action_dispatch/middleware/host_authorization.rb:143:in `call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in `call'
+railties (8.0.3) lib/rails/engine.rb:535:in `call'
+puma (7.2.0) lib/puma/configuration.rb:296:in `call'
+puma (7.2.0) lib/puma/request.rb:103:in `block in handle_request'
+puma (7.2.0) lib/puma/thread_pool.rb:355:in `with_force_shutdown'
+puma (7.2.0) lib/puma/request.rb:102:in `handle_request'
+puma (7.2.0) lib/puma/server.rb:503:in `process_client'
+puma (7.2.0) lib/puma/server.rb:262:in `block in run'
+puma (7.2.0) lib/puma/thread_pool.rb:182:in `block in spawn_thread'
+Started POST "/api/v1/auth/sign_up" for 127.0.0.1 at 2026-02-15 19:25:54 -0500
+  [1m[36mActiveRecord::SchemaMigration Load (18.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Api::V1::AuthController#sign_up as */*
+  Parameters: {"email"=>"Test@test.com", "password"=>"[FILTERED]", "name"=>"Test", "auth"=>{"email"=>"Test@test.com", "password"=>"[FILTERED]", "name"=>"Test"}}
+Completed 500 Internal Server Error in 825ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+NoMethodError (undefined method `devise' for class User):
+  
+app/models/user.rb:4:in `<class:User>'
+app/models/user.rb:3:in `<main>'
+app/controllers/api/v1/auth_controller.rb:17:in `sign_up'
+Started POST "/api/v1/auth/sign_up" for 127.0.0.1 at 2026-02-15 19:32:58 -0500
+  [1m[36mActiveRecord::SchemaMigration Load (21.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Api::V1::AuthController#sign_up as */*
+  Parameters: {"email"=>"test@test.com", "password"=>"[FILTERED]", "name"=>"Test", "auth"=>{"email"=>"test@test.com", "password"=>"[FILTERED]", "name"=>"Test"}}
+[31mUnpermitted parameters: :password, :auth. Context: { controller: Api::V1::AuthController, action: sign_up, request: #<ActionDispatch::Request:0x00007f3c6d2cb0e0>, params: {"email"=>"test@test.com", "password"=>"[FILTERED]", "name"=>"Test", "controller"=>"api/v1/auth", "action"=>"sign_up", "auth"=>{"email"=>"test@test.com", "password"=>"[FILTERED]", "name"=>"Test"}} }[0m
+  [1m[36mTRANSACTION (29.5ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:19:in `sign_up'
+  [1m[36mUser Exists? (63.1ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "test@test.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/auth_controller.rb:19:in `sign_up'
+  [1m[36mCACHE User Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "test@test.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/auth_controller.rb:19:in `sign_up'
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "name", "business_name", "plan", "admin", "suspended", "provider", "uid", "created_at", "updated_at", "reset_password_token", "reset_password_sent_at", "remember_created_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "test@test.com"], ["encrypted_password", "[FILTERED]"], ["name", "Test"], ["business_name", nil], ["plan", "free"], ["admin", 0], ["suspended", 0], ["provider", nil], ["uid", nil], ["created_at", "2026-02-16 00:33:07.901963"], ["updated_at", "2026-02-16 00:33:07.901963"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil]]
+  ↳ app/controllers/api/v1/auth_controller.rb:19:in `sign_up'
+  [1m[36mTRANSACTION (17.9ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:19:in `sign_up'
+Completed 500 Internal Server Error in 4082ms (ActiveRecord: 320.6ms (3 queries, 1 cached) | GC: 0.8ms)
+
+
+  
+ArgumentError (wrong number of arguments (given 0, expected 1)):
+  
+app/services/jwt_service.rb:8:in `encode'
+app/controllers/api/v1/auth_controller.rb:55:in `render_auth'
+app/controllers/api/v1/auth_controller.rb:20:in `sign_up'
+Started POST "/api/v1/auth/sign_up" for 127.0.0.1 at 2026-02-15 19:36:43 -0500
+  [1m[36mActiveRecord::SchemaMigration Load (3.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Api::V1::AuthController#sign_up as */*
+  Parameters: {"email"=>"Test@test.com", "password"=>"[FILTERED]", "name"=>"Tester", "auth"=>{"email"=>"Test@test.com", "password"=>"[FILTERED]", "name"=>"Tester"}}
+[31mUnpermitted parameters: :password, :auth. Context: { controller: Api::V1::AuthController, action: sign_up, request: #<ActionDispatch::Request:0x00007ffb2568a150>, params: {"email"=>"Test@test.com", "password"=>"[FILTERED]", "name"=>"Tester", "controller"=>"api/v1/auth", "action"=>"sign_up", "auth"=>{"email"=>"Test@test.com", "password"=>"[FILTERED]", "name"=>"Tester"}} }[0m
+  [1m[36mTRANSACTION (4.5ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:19:in `sign_up'
+  [1m[36mUser Exists? (13.9ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "test@test.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/auth_controller.rb:19:in `sign_up'
+  [1m[36mCACHE User Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "test@test.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/auth_controller.rb:19:in `sign_up'
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:19:in `sign_up'
+Completed 422 Unprocessable Content in 2601ms (Views: 0.5ms | ActiveRecord: 340.8ms (2 queries, 1 cached) | GC: 1.4ms)
+
+
+Started POST "/api/v1/auth/sign_up" for 127.0.0.1 at 2026-02-15 19:39:19 -0500
+Processing by Api::V1::AuthController#sign_up as */*
+  Parameters: {"email"=>"newuser@test.com", "password"=>"[FILTERED]", "name"=>"Tester", "auth"=>{"email"=>"newuser@test.com", "password"=>"[FILTERED]", "name"=>"Tester"}}
+[31mUnpermitted parameters: :password, :auth. Context: { controller: Api::V1::AuthController, action: sign_up, request: #<ActionDispatch::Request:0x00007ffaf7dc15f0>, params: {"email"=>"newuser@test.com", "password"=>"[FILTERED]", "name"=>"Tester", "controller"=>"api/v1/auth", "action"=>"sign_up", "auth"=>{"email"=>"newuser@test.com", "password"=>"[FILTERED]", "name"=>"Tester"}} }[0m
+  [1m[36mTRANSACTION (2.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:19:in `sign_up'
+  [1m[36mUser Exists? (5.9ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "newuser@test.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/auth_controller.rb:19:in `sign_up'
+  [1m[36mCACHE User Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "newuser@test.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/auth_controller.rb:19:in `sign_up'
+  [1m[36mUser Create (0.4ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "name", "business_name", "plan", "admin", "suspended", "provider", "uid", "created_at", "updated_at", "reset_password_token", "reset_password_sent_at", "remember_created_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "newuser@test.com"], ["encrypted_password", "[FILTERED]"], ["name", "Tester"], ["business_name", nil], ["plan", "free"], ["admin", 0], ["suspended", 0], ["provider", nil], ["uid", nil], ["created_at", "2026-02-16 00:39:22.784599"], ["updated_at", "2026-02-16 00:39:22.784599"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil]]
+  ↳ app/controllers/api/v1/auth_controller.rb:19:in `sign_up'
+  [1m[36mTRANSACTION (14.9ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:19:in `sign_up'
+Completed 200 OK in 654ms (Views: 0.2ms | ActiveRecord: 193.2ms (3 queries, 1 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/auth/me" for 127.0.0.1 at 2026-02-15 19:39:22 -0500
+Processing by Api::V1::AuthController#me as */*
+  Parameters: {"auth"=>{}}
+  [1m[36mUser Load (34.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/auth_controller.rb:48:in `authenticate_user!'
+Completed 200 OK in 66ms (Views: 0.3ms | ActiveRecord: 34.6ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/v1/auth/sign_in" for 127.0.0.1 at 2026-02-15 19:40:11 -0500
+Processing by Api::V1::AuthController#sign_in as */*
+  Parameters: {"email"=>"newuser@test.com", "password"=>"[FILTERED]", "auth"=>{"email"=>"newuser@test.com", "password"=>"[FILTERED]"}}
+  [1m[36mUser Load (3.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["email", "newuser@test.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/auth_controller.rb:8:in `sign_in'
+Completed 401 Unauthorized in 268ms (Views: 0.2ms | ActiveRecord: 3.0ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/feedback" for 127.0.0.1 at 2026-02-15 19:40:12 -0500
+Processing by Api::V1::FeedbackController#index as */*
+  Parameters: {"feedback"=>{}}
+  [1m[36mUser Load (2.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/base_controller.rb:14:in `authenticate_user!'
+  [1m[36mFeedbackSubmission Load (2.2ms)[0m  [1m[34mSELECT "feedback_submissions".* FROM "feedback_submissions" INNER JOIN "locations" ON "locations"."id" = "feedback_submissions"."location_id" WHERE "locations"."user_id" = ? ORDER BY "feedback_submissions"."created_at" DESC[0m  [["user_id", 2]]
+  ↳ app/controllers/api/v1/feedback_controller.rb:11:in `map'
+Completed 200 OK in 1575ms (Views: 0.3ms | ActiveRecord: 17.0ms (2 queries, 0 cached) | GC: 1.8ms)
+
+
+Started GET "/api/v1/feedback" for 127.0.0.1 at 2026-02-15 19:40:15 -0500
+Processing by Api::V1::FeedbackController#index as */*
+  Parameters: {"feedback"=>{}}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/base_controller.rb:14:in `authenticate_user!'
+  [1m[36mFeedbackSubmission Load (0.6ms)[0m  [1m[34mSELECT "feedback_submissions".* FROM "feedback_submissions" INNER JOIN "locations" ON "locations"."id" = "feedback_submissions"."location_id" WHERE "locations"."user_id" = ? ORDER BY "feedback_submissions"."created_at" DESC[0m  [["user_id", 2]]
+  ↳ app/controllers/api/v1/feedback_controller.rb:11:in `map'
+Completed 200 OK in 16ms (Views: 0.4ms | ActiveRecord: 1.0ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/feedback" for 127.0.0.1 at 2026-02-15 19:40:27 -0500
+Processing by Api::V1::FeedbackController#index as */*
+  Parameters: {"feedback"=>{}}
+  [1m[36mUser Load (2.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/base_controller.rb:14:in `authenticate_user!'
+  [1m[36mFeedbackSubmission Load (2.4ms)[0m  [1m[34mSELECT "feedback_submissions".* FROM "feedback_submissions" INNER JOIN "locations" ON "locations"."id" = "feedback_submissions"."location_id" WHERE "locations"."user_id" = ? ORDER BY "feedback_submissions"."created_at" DESC[0m  [["user_id", 2]]
+  ↳ app/controllers/api/v1/feedback_controller.rb:11:in `map'
+Completed 200 OK in 22ms (Views: 0.4ms | ActiveRecord: 4.4ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/feedback" for 127.0.0.1 at 2026-02-15 19:40:28 -0500
+Processing by Api::V1::FeedbackController#index as */*
+  Parameters: {"feedback"=>{}}
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/base_controller.rb:14:in `authenticate_user!'
+  [1m[36mFeedbackSubmission Load (0.7ms)[0m  [1m[34mSELECT "feedback_submissions".* FROM "feedback_submissions" INNER JOIN "locations" ON "locations"."id" = "feedback_submissions"."location_id" WHERE "locations"."user_id" = ? ORDER BY "feedback_submissions"."created_at" DESC[0m  [["user_id", 2]]
+  ↳ app/controllers/api/v1/feedback_controller.rb:11:in `map'
+Completed 200 OK in 12ms (Views: 1.0ms | ActiveRecord: 1.6ms (2 queries, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/api/v1/locations" for 127.0.0.1 at 2026-02-15 19:40:30 -0500
+Processing by Api::V1::LocationsController#index as */*
+  Parameters: {"location"=>{}}
+  [1m[36mUser Load (2.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/base_controller.rb:14:in `authenticate_user!'
+  [1m[36mLocation Load (0.9ms)[0m  [1m[34mSELECT "locations".* FROM "locations" WHERE "locations"."user_id" = ?[0m  [["user_id", 2]]
+  ↳ app/controllers/api/v1/locations_controller.rb:12:in `map'
+Completed 200 OK in 492ms (Views: 0.2ms | ActiveRecord: 2.9ms (2 queries, 0 cached) | GC: 0.2ms)
+
+
+Started GET "/api/v1/locations" for 127.0.0.1 at 2026-02-15 19:40:32 -0500
+Processing by Api::V1::LocationsController#index as */*
+  Parameters: {"location"=>{}}
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/base_controller.rb:14:in `authenticate_user!'
+  [1m[36mLocation Load (0.6ms)[0m  [1m[34mSELECT "locations".* FROM "locations" WHERE "locations"."user_id" = ?[0m  [["user_id", 2]]
+  ↳ app/controllers/api/v1/locations_controller.rb:12:in `map'
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 1.3ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/locations" for 127.0.0.1 at 2026-02-15 19:40:38 -0500
+Processing by Api::V1::LocationsController#index as */*
+  Parameters: {"location"=>{}}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/base_controller.rb:14:in `authenticate_user!'
+  [1m[36mLocation Load (0.4ms)[0m  [1m[34mSELECT "locations".* FROM "locations" WHERE "locations"."user_id" = ?[0m  [["user_id", 2]]
+  ↳ app/controllers/api/v1/locations_controller.rb:12:in `map'
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 1.0ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/locations" for 127.0.0.1 at 2026-02-15 19:40:39 -0500
+Processing by Api::V1::LocationsController#index as */*
+  Parameters: {"location"=>{}}
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/base_controller.rb:14:in `authenticate_user!'
+  [1m[36mLocation Load (1.3ms)[0m  [1m[34mSELECT "locations".* FROM "locations" WHERE "locations"."user_id" = ?[0m  [["user_id", 2]]
+  ↳ app/controllers/api/v1/locations_controller.rb:12:in `map'
+Completed 200 OK in 14ms (Views: 0.1ms | ActiveRecord: 2.5ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/feedback" for 127.0.0.1 at 2026-02-15 19:40:44 -0500
+Processing by Api::V1::FeedbackController#index as */*
+  Parameters: {"feedback"=>{}}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/base_controller.rb:14:in `authenticate_user!'
+  [1m[36mFeedbackSubmission Load (0.6ms)[0m  [1m[34mSELECT "feedback_submissions".* FROM "feedback_submissions" INNER JOIN "locations" ON "locations"."id" = "feedback_submissions"."location_id" WHERE "locations"."user_id" = ? ORDER BY "feedback_submissions"."created_at" DESC[0m  [["user_id", 2]]
+  ↳ app/controllers/api/v1/feedback_controller.rb:11:in `map'
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 1.1ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/feedback" for 127.0.0.1 at 2026-02-15 19:40:45 -0500
+Processing by Api::V1::FeedbackController#index as */*
+  Parameters: {"feedback"=>{}}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/base_controller.rb:14:in `authenticate_user!'
+  [1m[36mFeedbackSubmission Load (0.3ms)[0m  [1m[34mSELECT "feedback_submissions".* FROM "feedback_submissions" INNER JOIN "locations" ON "locations"."id" = "feedback_submissions"."location_id" WHERE "locations"."user_id" = ? ORDER BY "feedback_submissions"."created_at" DESC[0m  [["user_id", 2]]
+  ↳ app/controllers/api/v1/feedback_controller.rb:11:in `map'
+Completed 200 OK in 16ms (Views: 0.1ms | ActiveRecord: 0.9ms (2 queries, 0 cached) | GC: 9.6ms)
+
+
+Started GET "/api/v1/locations" for 127.0.0.1 at 2026-02-15 19:40:48 -0500
+Processing by Api::V1::LocationsController#index as */*
+  Parameters: {"location"=>{}}
+  [1m[36mUser Load (2.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/base_controller.rb:14:in `authenticate_user!'
+  [1m[36mLocation Load (4.4ms)[0m  [1m[34mSELECT "locations".* FROM "locations" WHERE "locations"."user_id" = ?[0m  [["user_id", 2]]
+  ↳ app/controllers/api/v1/locations_controller.rb:12:in `map'
+Completed 200 OK in 32ms (Views: 0.1ms | ActiveRecord: 7.3ms (2 queries, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/api/v1/locations" for 127.0.0.1 at 2026-02-15 19:40:49 -0500
+Processing by Api::V1::LocationsController#index as */*
+  Parameters: {"location"=>{}}
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/base_controller.rb:14:in `authenticate_user!'
+  [1m[36mLocation Load (3.9ms)[0m  [1m[34mSELECT "locations".* FROM "locations" WHERE "locations"."user_id" = ?[0m  [["user_id", 2]]
+  ↳ app/controllers/api/v1/locations_controller.rb:12:in `map'
+Completed 200 OK in 14ms (Views: 0.2ms | ActiveRecord: 4.6ms (2 queries, 0 cached) | GC: 0.0ms)
+
+

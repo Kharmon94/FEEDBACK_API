@@ -1,0 +1,20 @@
+production:
+  dispatchers:
+    - polling_interval: 1
+  workers:
+    - queues: "*"
+      threads: <%= ENV.fetch("JOB_CONCURRENCY", 1) %>
+
+development:
+  dispatchers:
+    - polling_interval: 1
+  workers:
+    - queues: "*"
+      threads: 1
+
+test:
+  dispatchers:
+    - polling_interval: 0.1
+  workers:
+    - queues: "*"
+      threads: 1
