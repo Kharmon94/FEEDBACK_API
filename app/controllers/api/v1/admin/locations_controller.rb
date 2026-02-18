@@ -6,6 +6,7 @@ module Api
       class LocationsController < BaseController
         def index
           locs = Location.includes(:user).order(created_at: :desc)
+          locs = locs.where(user_id: params[:user_id]) if params[:user_id].present?
           locs = locs.joins(:user).where("locations.name LIKE ? OR users.name LIKE ? OR users.email LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%") if params[:search].present?
           page = (params[:page] || 1).to_i
           per = (params[:per_page] || 50).to_i

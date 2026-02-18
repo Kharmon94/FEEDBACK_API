@@ -46,6 +46,9 @@ Rails.application.routes.draw do
         end
         get "analytics", to: "analytics#index"
         get "analytics/export", to: "analytics#export"
+        resources :suggestions, only: %i[index show] do
+          get :export, on: :collection
+        end
         get "settings", to: "settings#show"
         put "settings", to: "settings#update"
       end
