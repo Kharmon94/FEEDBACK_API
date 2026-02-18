@@ -6,10 +6,9 @@ OmniAuth.config.allowed_request_methods = %i[get post]
 client_id = Rails.application.credentials.dig(:google_oauth2, :client_id) || ENV["GOOGLE_CLIENT_ID"]
 client_secret = Rails.application.credentials.dig(:google_oauth2, :client_secret) || ENV["GOOGLE_CLIENT_SECRET"]
 
-# Run OmniAuth before the router so GET /api/v1/auth/google_oauth2 is handled here (redirect to Google),
-# not passed to the router which has no matching route and would 404.
-# Rack::Head is in the default API stack; RouteSet is not a named middleware.
-Rails.application.config.middleware.insert_before Rack::Head, OmniAuth::Builder do
+# OmniAuth must run after session (it needs env["rack.session"]) but before the router.
+# insert_after Session::CookieStore so session is loaded; we're still before the router.
+Rails.application.config.middleware.insert_after ActionDispatch::Session::CookieStore, OmniAuth::Builder do
   if client_id.present? && client_secret.present?
     provider :google_oauth2, client_id, client_secret, skip_jwt: true
   else
