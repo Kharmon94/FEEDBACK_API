@@ -5,6 +5,13 @@ Rails.application.routes.draw do
     namespace :v1 do
       get "up" => "health#show"
 
+      # OmniAuth mounted so GET /api/v1/auth/google_oauth2 is handled (avoids 404 in API-only).
+      # Only match OAuth paths, not auth/sign_in, auth/sign_up, auth/me.
+      mount OMNIAUTH_APP, at: "auth", constraints: ->(req) {
+        p = req.path
+        p == "/api/v1/auth/failure" || p.match?(%r{\A/api/v1/auth/(?!sign_in|sign_up|me)([^/]+)(/callback)?\z})
+      }
+
       post "auth/sign_in", to: "auth#sign_in"
       post "auth/sign_up", to: "auth#sign_up"
       get "auth/me", to: "auth#me"
