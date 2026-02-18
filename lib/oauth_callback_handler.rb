@@ -8,16 +8,18 @@ class OauthCallbackHandler
     auth = env["omniauth.auth"]
     frontend = (ENV["FRONTEND_ORIGIN"] || "").gsub(%r{/$}, "")
 
+    unless frontend.present?
+      return [503, { "Content-Type" => "text/plain" }, ["FRONTEND_ORIGIN is not set. Set it in the environment to redirect after sign-in."]]
+    end
+
     if auth.present?
       user = User.from_omniauth(auth)
       token = JwtService.encode({ user_id: user.id })
-      url = frontend.present? ? "#{frontend}/auth/callback?token=#{CGI.escape(token)}" : "/"
-      return redirect_to(url)
+      return redirect_to("#{frontend}/auth/callback?token=#{CGI.escape(token)}")
     end
 
     # Failure or missing auth (e.g. OmniAuth redirected to /failure)
-    url = frontend.present? ? "#{frontend}/auth/callback?error=authentication_failed" : "/"
-    redirect_to(url)
+    redirect_to("#{frontend}/auth/callback?error=authentication_failed")
   end
 
   private
