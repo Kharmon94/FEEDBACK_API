@@ -36,6 +36,23 @@ module Api
           render json: { success: true, message: "User activated successfully" }, status: :ok
         end
 
+        def update
+          user = User.find(params[:id])
+          if params.key?(:admin) && params[:admin] == false
+            if user.id == current_user.id
+              return render json: { error: "Cannot revoke your own admin access." }, status: :unprocessable_entity
+            end
+            if User.where(admin: true).count == 1 && user.admin?
+              return render json: { error: "Cannot revoke the last admin." }, status: :unprocessable_entity
+            end
+          end
+          attrs = {}
+          attrs[:admin] = params[:admin] if params.key?(:admin)
+          attrs[:plan] = params[:plan] if params.key?(:plan)
+          user.update!(attrs)
+          render json: admin_user_json(user), status: :ok
+        end
+
         def export
           require "csv"
           users = User.all.order(created_at: :desc)
@@ -54,6 +71,7 @@ module Api
             name: u.name,
             email: u.email,
             plan: u.plan,
+            admin: u.admin?,
             status: u.suspended? ? "suspended" : "active",
             locations_count: u.locations.count,
             feedback_count: u.feedback_submissions.count,

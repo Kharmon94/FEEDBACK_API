@@ -33,7 +33,7 @@ Rails.application.routes.draw do
 
       namespace :admin do
         get "dashboard", to: "dashboard#index"
-        resources :users, only: %i[index show] do
+        resources :users, only: %i[index show update] do
           put :suspend, on: :member
           put :activate, on: :member
           get :export, on: :collection
