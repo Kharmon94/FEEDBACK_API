@@ -8,7 +8,8 @@ client_secret = Rails.application.credentials.dig(:google_oauth2, :client_secret
 
 # Run OmniAuth before the router so GET /api/v1/auth/google_oauth2 is handled here (redirect to Google),
 # not passed to the router which has no matching route and would 404.
-Rails.application.config.middleware.insert_before ActionDispatch::Routing::RouteSet, OmniAuth::Builder do
+# Rack::Head is in the default API stack; RouteSet is not a named middleware.
+Rails.application.config.middleware.insert_before Rack::Head, OmniAuth::Builder do
   if client_id.present? && client_secret.present?
     provider :google_oauth2, client_id, client_secret, skip_jwt: true
   else
