@@ -3,6 +3,8 @@
 # OmniAuth is mounted in routes at /api/v1/auth so the router dispatches to it
 # (avoids middleware ordering issues in API-only mode). path_prefix is empty
 # because the mount strips the path; PATH_INFO is e.g. /google_oauth2.
+require Rails.root.join("lib", "oauth_callback_handler")
+
 OmniAuth.config.path_prefix = ""
 OmniAuth.config.allowed_request_methods = %i[get post]
 
