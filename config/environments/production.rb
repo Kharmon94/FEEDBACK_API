@@ -57,7 +57,9 @@ Rails.application.configure do
 
   # Use Solid Cache (no Redis required). Unset REDIS_URL on Railway if set.
   config.cache_store = :solid_cache_store
-  config.active_job.queue_adapter = :solid_queue
+  # Use :inline so emails send during the request. No Solid Queue tables or worker needed.
+  # To use Solid Queue: run `rails solid_queue:install`, add queue DB config, run migrations, and run `bin/jobs`.
+  config.active_job.queue_adapter = :inline
 
   config.action_mailer.perform_caching = false
 
