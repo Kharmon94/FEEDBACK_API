@@ -24,6 +24,15 @@ module Api
           render json: admin_user_json(user), status: :ok
         end
 
+        def create
+          user = User.new(create_user_params)
+          if user.save
+            render json: admin_user_json(user), status: :created
+          else
+            render json: { error: user.errors.full_messages }, status: :unprocessable_entity
+          end
+        end
+
         def suspend
           user = User.find(params[:id])
           user.update!(suspended: true)
@@ -77,6 +86,12 @@ module Api
             feedback_count: u.feedback_submissions.count,
             created_at: u.created_at.iso8601
           }
+        end
+
+        def create_user_params
+          params.permit(:email, :name, :password, :plan).tap do |p|
+            p[:plan] ||= "free"
+          end
         end
       end
     end

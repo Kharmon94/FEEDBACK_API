@@ -23,6 +23,16 @@ module Api
           render json: admin_location_json(loc), status: :ok
         end
 
+        def create
+          user = User.find(create_location_params[:user_id])
+          location = user.locations.build(create_location_params.except(:user_id))
+          if location.save
+            render json: admin_location_json(location.reload), status: :created
+          else
+            render json: { error: location.errors.full_messages }, status: :unprocessable_entity
+          end
+        end
+
         def export
           require "csv"
           locs = Location.includes(:user).order(created_at: :desc)
@@ -46,6 +56,10 @@ module Api
             avg_rating: l.feedback_submissions.average(:rating)&.round(1),
             created_at: l.created_at.iso8601
           }
+        end
+
+        def create_location_params
+          params.permit(:user_id, :name)
         end
       end
     end
