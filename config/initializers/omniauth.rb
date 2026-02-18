@@ -7,13 +7,29 @@ require Rails.root.join("lib", "oauth_callback_handler")
 
 OmniAuth.config.path_prefix = ""
 OmniAuth.config.allowed_request_methods = %i[get post]
+OmniAuth.config.silence_get_warning = true
+
+if Rails.env.production?
+  api_origin = (ENV["API_ORIGIN"] || "").gsub(%r{/$}, "")
+  OmniAuth.config.full_host = api_origin if api_origin.present?
+end
+
+frontend_origin = (ENV["FRONTEND_ORIGIN"] || "").gsub(%r{/$}, "")
+OmniAuth.config.on_failure = proc do |env|
+  if frontend_origin.present?
+    [302, { "Location" => "#{frontend_origin}/auth/callback?error=authentication_failed", "Content-Type" => "text/html" }, []]
+  else
+    [503, { "Content-Type" => "text/plain" }, ["Authentication failed. FRONTEND_ORIGIN not set."]]
+  end
+end
 
 client_id = Rails.application.credentials.dig(:google_oauth2, :client_id) || ENV["GOOGLE_CLIENT_ID"]
 client_secret = Rails.application.credentials.dig(:google_oauth2, :client_secret) || ENV["GOOGLE_CLIENT_SECRET"]
 
 if client_id.present? && client_secret.present?
   OMNIAUTH_APP = OmniAuth::Builder.new do
-    provider :google_oauth2, client_id, client_secret, skip_jwt: true
+    # provider_ignores_state: fallback when session is lost on callback (e.g. cross-domain cookie); skips CSRF state check.
+    provider :google_oauth2, client_id, client_secret, skip_jwt: true, provider_ignores_state: true
     run OauthCallbackHandler.new
   end
 else
