@@ -57,7 +57,13 @@ module Api
       end
 
       def location_params
-        params.permit(:name, :logo_url, :logo, review_platforms: {})
+        params.permit(
+          :name, :address, :phone, :email, :logo_url, :logo,
+          :custom_message, :email_notifications,
+          review_platforms: {},
+          color_scheme: {},
+          notification_emails: []
+        )
       end
 
       def location_json(l)
@@ -65,8 +71,15 @@ module Api
           id: l.id,
           name: l.name,
           slug: l.slug,
+          address: l.address,
+          phone: l.phone,
+          email: l.email,
           logo_url: logo_url_for(l),
-          review_platforms: l.review_platforms
+          review_platforms: l.review_platforms,
+          custom_message: l.custom_message,
+          color_scheme: l.color_scheme,
+          email_notifications: l.email_notifications,
+          notification_emails: l.notification_emails || []
         }
       end
 
@@ -74,8 +87,13 @@ module Api
         {
           id: l.id,
           name: l.name,
+          address: l.address,
+          phone: l.phone,
+          email: l.email,
           logo_url: logo_url_for(l),
-          review_platforms: l.review_platforms
+          review_platforms: l.review_platforms,
+          custom_message: l.custom_message,
+          color_scheme: l.color_scheme
         }
       end
 

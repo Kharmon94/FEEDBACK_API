@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_19_000004) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_19_000005) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -73,6 +73,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_000004) do
     t.string "logo_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "address"
+    t.string "phone"
+    t.string "email"
+    t.text "custom_message"
+    t.json "color_scheme"
+    t.boolean "email_notifications", default: true, null: false
+    t.json "notification_emails", default: [], null: false
     t.index ["slug"], name: "index_locations_on_slug", unique: true
     t.index ["user_id"], name: "index_locations_on_user_id"
   end

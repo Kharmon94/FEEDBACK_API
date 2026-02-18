@@ -63,6 +63,14 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  host = begin
+    u = URI.parse(ENV["API_ORIGIN"].presence || ENV["FRONTEND_ORIGIN"].presence || "https://feedback-page.com")
+    u.host
+  rescue
+    "feedback-page.com"
+  end
+  config.action_mailer.default_url_options = { host: host, protocol: "https" }
+
   if ENV["SENDGRID_SECRET"].present?
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
@@ -71,13 +79,18 @@ Rails.application.configure do
       domain: ENV.fetch("MAILER_DOMAIN", "feedback-page.com"),
       authentication: :plain,
       user_name: "apikey",
-      password: ENV["SENDGRID_SECRET"]
+      password: ENV["SENDGRID_SECRET"],
+      enable_starttls_auto: true
     }
     config.action_mailer.raise_delivery_errors = true
+    config.after_initialize do
+      from = ENV["MAILER_FROM"].presence || (AdminSetting.instance.support_email rescue nil)
+      Rails.logger.info "[ActionMailer] Production emails enabled (SMTP SendGrid), from: #{from}"
+    end
   else
     config.action_mailer.delivery_method = :test
     config.after_initialize do
-      Rails.logger.warn "[ActionMailer] SENDGRID_SECRET not set — emails will not be delivered (using :test)"
+      Rails.logger.warn "[ActionMailer] SENDGRID_SECRET not set — emails will NOT be delivered (using :test). Set SENDGRID_SECRET in Railway to send real emails."
     end
   end
 

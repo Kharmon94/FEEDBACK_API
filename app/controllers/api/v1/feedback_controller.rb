@@ -19,9 +19,11 @@ module Api
         if submission.save
           if AdminSetting.instance.notify_on_new_feedback
             FeedbackMailer.new_feedback(submission).deliver_later
+            Rails.logger.info "[Feedback] Sent new_feedback email to #{submission.location.user.email}"
           end
           if submission.contact_me && submission.customer_email.present?
             FeedbackMailer.contact_me_acknowledgment(submission).deliver_later
+            Rails.logger.info "[Feedback] Sent contact_me_acknowledgment to #{submission.customer_email}"
           end
           render json: { feedback: feedback_json(submission) }, status: :created
         else

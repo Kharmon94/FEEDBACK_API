@@ -35,4 +35,6 @@ gem "solid_cable"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
+  gem "letter_opener"
+  gem "letter_opener_web"
 end
