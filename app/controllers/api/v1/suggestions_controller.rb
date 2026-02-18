@@ -15,6 +15,9 @@ module Api
         authorize! :create, Suggestion
         suggestion = Suggestion.new(suggestion_params)
         if suggestion.save
+          if suggestion.location&.user.present? && AdminSetting.instance.notify_on_new_suggestion
+            SuggestionMailer.new_suggestion(suggestion).deliver_later
+          end
           render json: { suggestion: suggestion_json(suggestion) }, status: :created
         else
           render json: { error: suggestion.errors.full_messages }, status: :unprocessable_entity

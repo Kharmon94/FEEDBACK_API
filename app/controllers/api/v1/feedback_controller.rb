@@ -17,6 +17,12 @@ module Api
         return render json: { error: "Location not found" }, status: :not_found unless location
         submission = location.feedback_submissions.build(feedback_params)
         if submission.save
+          if AdminSetting.instance.notify_on_new_feedback
+            FeedbackMailer.new_feedback(submission).deliver_later
+          end
+          if submission.contact_me && submission.customer_email.present?
+            FeedbackMailer.contact_me_acknowledgment(submission).deliver_later
+          end
           render json: { feedback: feedback_json(submission) }, status: :created
         else
           render json: { error: submission.errors.full_messages }, status: :unprocessable_entity

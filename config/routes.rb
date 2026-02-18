@@ -14,6 +14,10 @@ Rails.application.routes.draw do
 
       post "auth/sign_in", to: "auth#sign_in"
       post "auth/sign_up", to: "auth#sign_up"
+      post "auth/password", to: "auth#request_password_reset"
+      put "auth/password", to: "auth#reset_password"
+      get "auth/confirm", to: "auth#confirm_email"
+      post "auth/confirm/resend", to: "auth#resend_confirmation"
       get "auth/me", to: "auth#me"
       get "auth/:provider/callback", to: "auth#omniauth_callback"
       get "auth/failure", to: "auth#failure"

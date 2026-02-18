@@ -1,0 +1,17 @@
+<p style="margin: 0 0 16px; color: #334155;">Hi <%= @owner.name.presence || @owner.email %>,</p>
+
+<p style="margin: 0 0 16px; color: #334155;">You have new feedback for <strong><%= @location.name %></strong>.</p>
+
+<div style="margin: 0 0 24px; padding: 16px; background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+  <p style="margin: 0 0 8px; color: #334155;"><strong>Rating:</strong> <%= @submission.rating %>/5</p>
+  <% if @submission.comment.present? %>
+    <p style="margin: 0 0 8px; color: #334155;"><strong>Comment:</strong> <%= @submission.comment %></p>
+  <% end %>
+  <% if @submission.customer_name.present? || @submission.customer_email.present? %>
+    <p style="margin: 0; color: #334155;"><strong>From:</strong> <%= [@submission.customer_name, @submission.customer_email].compact.join(" ") %></p>
+  <% end %>
+</div>
+
+<p style="margin: 0;">
+  <a href="<%= @feedback_url %>" style="display: inline-block; background-color: #0f172a; color: #ffffff !important; padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none;">View in dashboard</a>
+</p>

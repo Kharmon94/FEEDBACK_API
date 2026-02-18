@@ -19,4 +19,36 @@ class User < ApplicationRecord
       user.save!
     end
   end
+
+  # Use our UserMailer for password reset (link to frontend)
+  def send_reset_password_instructions_notification(raw_token)
+    UserMailer.reset_password_instructions(self, raw_token).deliver_later
+  end
+
+  # Email verification (gated by AdminSetting.enable_email_verification)
+  def confirmed?
+    confirmed_at.present?
+  end
+
+  def send_confirmation_instructions
+    raw = SecureRandom.urlsafe_base64(32)
+    self.confirmation_token = Digest::SHA256.hexdigest(raw)
+    self.confirmation_sent_at = Time.current
+    save!(validate: false)
+    UserMailer.confirmation_instructions(self, raw).deliver_later
+    raw
+  end
+
+  def self.find_by_confirmation_token(raw_token)
+    return nil if raw_token.blank?
+    digest = Digest::SHA256.hexdigest(raw_token)
+    find_by(confirmation_token: digest)
+  end
+
+  def confirm!
+    self.confirmed_at = Time.current
+    self.confirmation_token = nil
+    self.confirmation_sent_at = nil
+    save!(validate: false)
+  end
 end

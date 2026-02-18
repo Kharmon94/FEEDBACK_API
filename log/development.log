@@ -345,3 +345,51 @@ Migrating to CreatePlans (20260218000001)
   [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260218000001') RETURNING "version"[0m
   [1m[36mTRANSACTION (8.1ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
   [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+OmniAuth Google: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET missing. Google sign-in disabled.
+  [1m[36mActiveRecord::InternalMetadata Load (5.5ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (1.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to AddNotifyOnNewFeedbackToAdminSettings (20260219000001)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (2.7ms)[0m  [1m[35mALTER TABLE "admin_settings" ADD "notify_on_new_feedback" boolean DEFAULT 1 NOT NULL[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260219000001') RETURNING "version"[0m
+  [1m[36mTRANSACTION (8.1ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+Migrating to AddConfirmableToUsers (20260219000002)
+  [1m[36mTRANSACTION (2.5ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (4.2ms)[0m  [1m[35mALTER TABLE "users" ADD "confirmation_token" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "users" ADD "confirmed_at" datetime(6)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "users" ADD "confirmation_sent_at" datetime(6)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mALTER TABLE "users" ADD "unconfirmed_email" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_confirmation_token" ON "users" ("confirmation_token")[0m
+  [1m[35m (2.7ms)[0m  [1m[33mUPDATE users SET confirmed_at = datetime('now') WHERE confirmed_at IS NULL[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260219000002') RETURNING "version"[0m
+  [1m[36mTRANSACTION (5.0ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+Migrating to BackfillConfirmedAtForExistingUsers (20260219000003)
+  [1m[36mTRANSACTION (4.1ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (6.5ms)[0m  [1m[33mUPDATE users SET confirmed_at = 2026-02-18 21:50:00.827235 WHERE confirmed_at IS NULL[0m
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+OmniAuth Google: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET missing. Google sign-in disabled.
+  [1m[36mActiveRecord::InternalMetadata Load (5.9ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to BackfillConfirmedAtForExistingUsers (20260219000003)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (2.4ms)[0m  [1m[33mUPDATE users SET confirmed_at = 2026-02-18 21:53:26.575624 WHERE confirmed_at IS NULL[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+OmniAuth Google: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET missing. Google sign-in disabled.
+  [1m[36mActiveRecord::InternalMetadata Load (4.3ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to BackfillConfirmedAtForExistingUsers (20260219000003)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[36mUser Update All (0.1ms)[0m  [1m[33mUPDATE "users" SET "confirmed_at" = ? WHERE "users"."confirmed_at" IS NULL[0m  [["confirmed_at", "2026-02-18 21:56:07.122965"]]
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260219000003') RETURNING "version"[0m
+  [1m[36mTRANSACTION (5.0ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+OmniAuth Google: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET missing. Google sign-in disabled.
+OmniAuth Google: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET missing. Google sign-in disabled.
+  [1m[36mActiveRecord::InternalMetadata Load (5.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to AddNotifyOnNewSuggestionToAdminSettings (20260219000004)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (2.8ms)[0m  [1m[35mALTER TABLE "admin_settings" ADD "notify_on_new_suggestion" boolean DEFAULT 1 NOT NULL[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260219000004') RETURNING "version"[0m
+  [1m[36mTRANSACTION (8.4ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m

@@ -1,0 +1,14 @@
+<p style="margin: 0 0 16px; color: #334155;">Hi <%= @user.name.presence || @user.email %>,</p>
+
+<p style="margin: 0 0 16px; color: #334155;">An administrator has created a Feedback Page account for you.</p>
+
+<div style="margin: 0 0 24px; padding: 16px; background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+  <p style="margin: 0 0 8px; color: #334155;"><strong>Email:</strong> <%= @user.email %></p>
+  <p style="margin: 0; color: #334155;"><strong>Temporary password:</strong> <%= @temporary_password %></p>
+</div>
+
+<p style="margin: 0 0 24px; color: #334155;">Please sign in and change your password after your first login.</p>
+
+<p style="margin: 0;">
+  <a href="<%= @login_url %>" style="display: inline-block; background-color: #0f172a; color: #ffffff !important; padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none;">Sign in</a>
+</p>

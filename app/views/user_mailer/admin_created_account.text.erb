@@ -1,0 +1,10 @@
+Hi <%= @user.name.presence || @user.email %>,
+
+An administrator has created a Feedback Page account for you.
+
+Email: <%= @user.email %>
+Temporary password: <%= @temporary_password %>
+
+Please sign in at <%= @login_url %> and change your password after your first login.
+
+— Feedback Page

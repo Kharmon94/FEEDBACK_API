@@ -29,7 +29,9 @@ module Api
           if user.plan.present? && !Plan.active.exists?(slug: user.plan)
             return render json: { error: ["Plan is invalid"] }, status: :unprocessable_entity
           end
+          temporary_password = params[:password].presence
           if user.save
+            UserMailer.admin_created_account(user, temporary_password || "(contact admin for access)").deliver_later
             render json: admin_user_json(user), status: :created
           else
             render json: { error: user.errors.full_messages }, status: :unprocessable_entity
@@ -39,12 +41,14 @@ module Api
         def suspend
           user = User.find(params[:id])
           user.update!(suspended: true)
+          UserMailer.account_suspended(user).deliver_later
           render json: { success: true, message: "User suspended successfully" }, status: :ok
         end
 
         def activate
           user = User.find(params[:id])
           user.update!(suspended: false)
+          UserMailer.account_activated(user).deliver_later
           render json: { success: true, message: "User activated successfully" }, status: :ok
         end
 
@@ -60,6 +64,7 @@ module Api
           end
           attrs = {}
           attrs[:admin] = params[:admin] if params.key?(:admin)
+          previous_plan = user.plan
           if params.key?(:plan)
             desired_plan = params[:plan].to_s
             unless Plan.active.exists?(slug: desired_plan)
@@ -68,6 +73,9 @@ module Api
             attrs[:plan] = desired_plan
           end
           user.update!(attrs)
+          if attrs.key?(:plan) && previous_plan != user.plan
+            UserMailer.plan_changed(user, previous_plan, user.plan).deliver_later
+          end
           render json: admin_user_json(user), status: :ok
         end
 

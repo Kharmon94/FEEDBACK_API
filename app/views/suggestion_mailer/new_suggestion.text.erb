@@ -1,0 +1,13 @@
+Hi <%= @owner.name.presence || @owner.email %>,
+
+You have a new suggestion for <%= @location.name %>.
+
+Content:
+<%= @suggestion.content %>
+<% if @suggestion.submitter_email.present? %>
+From: <%= @suggestion.submitter_email %>
+<% end %>
+
+View in dashboard: <%= @suggestions_url %>
+
+— Feedback Page

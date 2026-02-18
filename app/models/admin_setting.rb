@@ -8,7 +8,9 @@ class AdminSetting < ApplicationRecord
       max_locations_per_user: 100,
       enable_user_registration: true,
       enable_email_verification: false,
-      enable_social_login: true
+      enable_social_login: true,
+      notify_on_new_feedback: true,
+      notify_on_new_suggestion: true
     )
   end
 end

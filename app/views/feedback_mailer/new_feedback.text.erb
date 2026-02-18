@@ -1,0 +1,15 @@
+Hi <%= @owner.name.presence || @owner.email %>,
+
+You have new feedback for <%= @location.name %>.
+
+Rating: <%= @submission.rating %>/5
+<% if @submission.comment.present? %>
+Comment: <%= @submission.comment %>
+<% end %>
+<% if @submission.customer_name.present? || @submission.customer_email.present? %>
+From: <%= [@submission.customer_name, @submission.customer_email].compact.join(" ") %>
+<% end %>
+
+View in dashboard: <%= @feedback_url %>
+
+— Feedback Page

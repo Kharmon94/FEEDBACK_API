@@ -1,0 +1,9 @@
+Hi <%= @user.name.presence || @user.email %>,
+
+Thanks for signing up. Please confirm your email address by opening the link below:
+
+<%= @confirm_url %>
+
+If you didn't create an account, you can ignore this email.
+
+— Feedback Page

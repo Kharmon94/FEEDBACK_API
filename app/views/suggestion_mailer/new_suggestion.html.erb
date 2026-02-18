@@ -1,0 +1,15 @@
+<p style="margin: 0 0 16px; color: #334155;">Hi <%= @owner.name.presence || @owner.email %>,</p>
+
+<p style="margin: 0 0 16px; color: #334155;">You have a new suggestion for <strong><%= @location.name %></strong>.</p>
+
+<div style="margin: 0 0 24px; padding: 16px; background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+  <p style="margin: 0 0 8px; color: #334155;"><strong>Content:</strong></p>
+  <p style="margin: 0; color: #334155;"><%= @suggestion.content %></p>
+  <% if @suggestion.submitter_email.present? %>
+    <p style="margin: 12px 0 0; color: #64748b; font-size: 14px;"><strong>From:</strong> <%= @suggestion.submitter_email %></p>
+  <% end %>
+</div>
+
+<p style="margin: 0;">
+  <a href="<%= @suggestions_url %>" style="display: inline-block; background-color: #0f172a; color: #ffffff !important; padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none;">View in dashboard</a>
+</p>

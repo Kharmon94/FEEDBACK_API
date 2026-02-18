@@ -24,7 +24,9 @@ module Api
             :max_locations_per_user,
             :enable_user_registration,
             :enable_email_verification,
-            :enable_social_login
+            :enable_social_login,
+            :notify_on_new_feedback,
+            :notify_on_new_suggestion
           )
         end
 
@@ -35,7 +37,9 @@ module Api
             max_locations_per_user: record.max_locations_per_user,
             enable_user_registration: record.enable_user_registration,
             enable_email_verification: record.enable_email_verification,
-            enable_social_login: record.enable_social_login
+            enable_social_login: record.enable_social_login,
+            notify_on_new_feedback: record.notify_on_new_feedback,
+            notify_on_new_suggestion: record.notify_on_new_suggestion
           }
         end
       end

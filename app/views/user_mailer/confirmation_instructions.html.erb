@@ -1,0 +1,9 @@
+<p style="margin: 0 0 16px; color: #334155;">Hi <%= @user.name.presence || @user.email %>,</p>
+
+<p style="margin: 0 0 24px; color: #334155;">Thanks for signing up. Please confirm your email address by clicking the button below:</p>
+
+<p style="margin: 0 0 24px;">
+  <a href="<%= @confirm_url %>" style="display: inline-block; background-color: #0f172a; color: #ffffff !important; padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none;">Confirm my email</a>
+</p>
+
+<p style="margin: 0; font-size: 14px; color: #64748b;">If you didn't create an account, you can ignore this email.</p>
