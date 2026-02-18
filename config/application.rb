@@ -50,5 +50,16 @@ module FeedbackApi
       session_options[:secure] = true
     end
     config.middleware.use ActionDispatch::Session::CookieStore, **session_options
+
+    # OmniAuth right after session so it has env["rack.session"] and runs before the router.
+    OmniAuth.config.path_prefix = "/api/v1/auth"
+    OmniAuth.config.allowed_request_methods = %i[get post]
+    gcid = Rails.application.credentials.dig(:google_oauth2, :client_id) || ENV["GOOGLE_CLIENT_ID"]
+    gsecret = Rails.application.credentials.dig(:google_oauth2, :client_secret) || ENV["GOOGLE_CLIENT_SECRET"]
+    config.middleware.use OmniAuth::Builder do
+      if gcid.present? && gsecret.present?
+        provider :google_oauth2, gcid, gsecret, skip_jwt: true
+      end
+    end
   end
 end
