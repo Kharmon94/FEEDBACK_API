@@ -32,6 +32,10 @@ module Api
 
       def omniauth_callback
         auth = request.env["omniauth.auth"]
+        if auth.blank?
+          # Session may have been lost on redirect from Google (e.g. cookie SameSite). Send user to failure.
+          return failure
+        end
         user = User.from_omniauth(auth)
         token = JwtService.encode({ user_id: user.id })
         frontend_origin = ENV["FRONTEND_ORIGIN"].to_s.gsub(%r{/$}, "")

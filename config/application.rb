@@ -43,6 +43,12 @@ module FeedbackApi
 
     # OmniAuth (OAuth callback) requires session middleware. Add cookies + session for API.
     config.middleware.use ActionDispatch::Cookies
-    config.middleware.use ActionDispatch::Session::CookieStore, key: "_feedback_api_session"
+    session_options = { key: "_feedback_api_session" }
+    if Rails.env.production?
+      # Allow session cookie when Google redirects back (cross-site). Requires secure.
+      session_options[:same_site] = :none
+      session_options[:secure] = true
+    end
+    config.middleware.use ActionDispatch::Session::CookieStore, **session_options
   end
 end
