@@ -33,11 +33,22 @@ module Api
       def omniauth_callback
         auth = request.env["omniauth.auth"]
         user = User.from_omniauth(auth)
-        render_auth(user)
+        token = JwtService.encode({ user_id: user.id })
+        frontend_origin = ENV["FRONTEND_ORIGIN"].to_s.gsub(%r{/$}, "")
+        if frontend_origin.present?
+          redirect_to "#{frontend_origin}/auth/callback?token=#{CGI.escape(token)}", allow_other_host: true
+        else
+          render_auth(user)
+        end
       end
 
       def failure
-        render json: { error: "Authentication failed" }, status: :unauthorized
+        frontend_origin = ENV["FRONTEND_ORIGIN"].to_s.gsub(%r{/$}, "")
+        if frontend_origin.present?
+          redirect_to "#{frontend_origin}/auth/callback?error=authentication_failed", allow_other_host: true
+        else
+          render json: { error: "Authentication failed" }, status: :unauthorized
+        end
       end
 
       private
