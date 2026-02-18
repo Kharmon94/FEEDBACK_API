@@ -333,3 +333,15 @@ OmniAuth Google: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET missing. Google sign-i
   [1m[36mCACHE User Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "admin@example.com"], ["LIMIT", 1]]
   [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "name", "business_name", "plan", "admin", "suspended", "provider", "uid", "created_at", "updated_at", "reset_password_token", "reset_password_sent_at", "remember_created_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "admin@example.com"], ["encrypted_password", "[FILTERED]"], ["name", "Admin"], ["business_name", nil], ["plan", "free"], ["admin", 1], ["suspended", 0], ["provider", nil], ["uid", nil], ["created_at", "2026-02-18 02:13:59.222081"], ["updated_at", "2026-02-18 02:13:59.222081"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil]]
   [1m[36mTRANSACTION (10.1ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+OmniAuth Google: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET missing. Google sign-in disabled.
+  [1m[36mActiveRecord::InternalMetadata Load (5.2ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreatePlans (20260218000001)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (2.5ms)[0m  [1m[35mCREATE TABLE "plans" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "slug" varchar NOT NULL, "name" varchar NOT NULL, "monthly_price_cents" integer, "yearly_price_cents" integer, "location_limit" integer, "features" json DEFAULT '[]' NOT NULL, "cta" varchar, "highlighted" boolean DEFAULT 0 NOT NULL, "display_order" integer DEFAULT 0 NOT NULL, "active" boolean DEFAULT 1 NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_plans_on_slug" ON "plans" ("slug")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_plans_on_active" ON "plans" ("active")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_plans_on_display_order" ON "plans" ("display_order")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260218000001') RETURNING "version"[0m
+  [1m[36mTRANSACTION (8.1ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m

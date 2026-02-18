@@ -26,6 +26,9 @@ module Api
 
         def create
           user = User.new(create_user_params)
+          if user.plan.present? && !Plan.active.exists?(slug: user.plan)
+            return render json: { error: ["Plan is invalid"] }, status: :unprocessable_entity
+          end
           if user.save
             render json: admin_user_json(user), status: :created
           else
@@ -57,7 +60,13 @@ module Api
           end
           attrs = {}
           attrs[:admin] = params[:admin] if params.key?(:admin)
-          attrs[:plan] = params[:plan] if params.key?(:plan)
+          if params.key?(:plan)
+            desired_plan = params[:plan].to_s
+            unless Plan.active.exists?(slug: desired_plan)
+              return render json: { error: "Plan is invalid" }, status: :unprocessable_entity
+            end
+            attrs[:plan] = desired_plan
+          end
           user.update!(attrs)
           render json: admin_user_json(user), status: :ok
         end

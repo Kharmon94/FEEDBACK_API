@@ -31,12 +31,18 @@ Rails.application.routes.draw do
       get "export/feedback", to: "export#feedback"
       get "export/suggestions", to: "export#suggestions"
 
+      get "plans", to: "plans#index"
+
       namespace :admin do
         get "dashboard", to: "dashboard#index"
         resources :users, only: %i[index show create update] do
           put :suspend, on: :member
           put :activate, on: :member
           get :export, on: :collection
+        end
+        resources :plans, only: %i[index show create update destroy] do
+          get :usage, on: :member
+          post :reassign, on: :member
         end
         resources :locations, only: %i[index show create] do
           get :export, on: :collection

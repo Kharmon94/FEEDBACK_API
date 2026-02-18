@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_16_000001) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_18_000001) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -73,6 +73,24 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_16_000001) do
     t.datetime "updated_at", null: false
     t.index ["slug"], name: "index_locations_on_slug", unique: true
     t.index ["user_id"], name: "index_locations_on_user_id"
+  end
+
+  create_table "plans", force: :cascade do |t|
+    t.string "slug", null: false
+    t.string "name", null: false
+    t.integer "monthly_price_cents"
+    t.integer "yearly_price_cents"
+    t.integer "location_limit"
+    t.json "features", default: [], null: false
+    t.string "cta"
+    t.boolean "highlighted", default: false, null: false
+    t.integer "display_order", default: 0, null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_plans_on_active"
+    t.index ["display_order"], name: "index_plans_on_display_order"
+    t.index ["slug"], name: "index_plans_on_slug", unique: true
   end
 
   create_table "suggestions", force: :cascade do |t|
