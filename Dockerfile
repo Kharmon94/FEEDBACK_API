@@ -21,8 +21,8 @@ FROM base AS build
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential git libvips libpq-dev pkg-config
 
-# Install application gems (generate lock if missing for Ruby 3.3)
-COPY Gemfile ./
+# Install application gems (use lock so COPY . . later does not mismatch)
+COPY Gemfile Gemfile.lock ./
 RUN bundle lock --add-platform ruby && bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
