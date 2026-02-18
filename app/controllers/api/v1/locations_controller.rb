@@ -46,7 +46,7 @@ module Api
 
       def show_public
         loc = Location.find_by(id: params[:id]) || Location.find_by(slug: params[:id])
-        return head :not_found unless loc
+        return render json: { error: "Location not found" }, status: :not_found unless loc
         render json: { location: location_public_json(loc) }, status: :ok
       end
 
