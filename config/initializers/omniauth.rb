@@ -8,7 +8,9 @@ require Rails.root.join("lib/oauth_callback_handler.rb")
 
 handler = OauthCallbackHandler.new
 
-OMNIAUTH_APP = if ENV["GOOGLE_CLIENT_ID"].present? && ENV["GOOGLE_CLIENT_SECRET"].present?
+# Avoid "already initialized constant" when loaded from routes.rb and again by Rails
+unless defined?(OMNIAUTH_APP)
+  OMNIAUTH_APP = if ENV["GOOGLE_CLIENT_ID"].present? && ENV["GOOGLE_CLIENT_SECRET"].present?
   OmniAuth::Builder.new(handler) do
     provider :google_oauth2,
       ENV["GOOGLE_CLIENT_ID"],
@@ -25,4 +27,5 @@ else
       [302, { "Location" => redirect, "Content-Type" => "text/html" }, []]
     end
   end
+end
 end
