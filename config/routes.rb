@@ -3,6 +3,11 @@ Rails.application.routes.draw do
 
   get "up" => "health#show", as: :rails_health_check
 
+  # Auth without /api/v1 prefix (for frontends that use base URL without path)
+  post "auth/password", to: "api/v1/auth#request_password_reset"
+  put "auth/password", to: "api/v1/auth#reset_password"
+  post "auth/confirm/resend", to: "api/v1/auth#resend_confirmation"
+
   namespace :api do
     namespace :v1 do
       get "up" => "health#show"
