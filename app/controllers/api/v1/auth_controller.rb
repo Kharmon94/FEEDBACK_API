@@ -40,21 +40,6 @@ module Api
         render json: { user: user_json(current_user) }, status: :ok
       end
 
-      # OAuth start: landing page that establishes session cookie before redirecting to Google.
-      # Browsers often drop cookies set during a 302 redirect from cross-site; this ensures
-      # the session exists before the OAuth redirect chain.
-      def oauth_start
-        session[:oauth_start] = true
-        origin = (ENV["API_ORIGIN"].presence || request.base_url).to_s.gsub(%r{/$}, "")
-        oauth_url = "#{origin}/api/v1/auth/google_oauth2"
-        html = <<~HTML
-          <!DOCTYPE html>
-          <html><head><meta http-equiv="refresh" content="2;url=#{ERB::Util.html_escape(oauth_url)}"></head>
-          <body>Redirecting to Google…</body></html>
-        HTML
-        render html: html.html_safe, content_type: "text/html"
-      end
-
       def request_password_reset
         user = User.find_by(email: params[:email]&.to_s&.downcase)
         if user

@@ -27,17 +27,6 @@ Rails.application.routes.draw do
     namespace :v1 do
       get "up" => "health#show"
 
-      # OAuth start: landing page that sets session cookie before redirecting to Google.
-      # Fixes "authentication_failed" when cookies are dropped on cross-site redirect.
-      get "auth/oauth_start", to: "auth#oauth_start"
-
-      # OmniAuth mounted so GET /api/v1/auth/google_oauth2 is handled (avoids 404 in API-only).
-      # Only match OAuth paths, not auth/sign_in, auth/sign_up, auth/me, oauth_start.
-      mount OMNIAUTH_APP, at: "auth", constraints: ->(req) {
-        p = req.path
-        p == "/api/v1/auth/failure" || p.match?(%r{\A/api/v1/auth/(?!sign_in|sign_up|me|oauth_start)([^/]+)(/callback)?\z})
-      }
-
       post "auth/sign_in", to: "auth#sign_in"
       post "auth/sign_up", to: "auth#sign_up"
       post "auth/password", to: "auth#request_password_reset"
