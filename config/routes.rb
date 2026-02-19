@@ -1,4 +1,8 @@
 # Routes updated 2026-02-19
+# OMNIAUTH_APP must be defined before mount; load the initializer explicitly
+# since routes may load before config/initializers on some environments (e.g. Railway).
+require_relative "initializers/omniauth"
+
 Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
