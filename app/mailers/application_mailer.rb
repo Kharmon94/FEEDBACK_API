@@ -51,9 +51,15 @@ class ApplicationMailer < ActionMailer::Base
   end
 
   def recipient_email
-    to = mail.to
-    return "" if to.blank?
-    to.is_a?(Array) ? to.first : to.to_s
+    # Derive from instance variables; do NOT use mail.to during layout render
+    # (mail may not be fully initialized, causing errors in collect_responses_from_templates)
+    u = instance_variable_get(:@user) || instance_variable_get(:@owner)
+    return u.email.to_s if u.present? && u.respond_to?(:email) && u.email.present?
+
+    sub = instance_variable_get(:@submission)
+    return sub.customer_email.to_s if sub.present? && sub.respond_to?(:customer_email) && sub.customer_email.present?
+
+    ""
   end
 
   private
