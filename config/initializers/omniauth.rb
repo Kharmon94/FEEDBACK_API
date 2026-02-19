@@ -4,6 +4,7 @@
 # OmniAuth is mounted at /auth and /api/v1/auth for Google OAuth.
 require "omniauth"
 require "omniauth-google-oauth2"
+require Rails.root.join("lib/oauth_callback_handler.rb")
 
 handler = OauthCallbackHandler.new
 
