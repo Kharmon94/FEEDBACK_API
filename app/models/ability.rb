@@ -15,7 +15,6 @@ class Ability
     can :create, FeedbackSubmission
     can :create, Suggestion
     can :create, OptIn
-    can :read, Location
 
     return if user.new_record?
 
