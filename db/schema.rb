@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_19_000005) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_19_000006) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -84,6 +84,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_000005) do
     t.index ["user_id"], name: "index_locations_on_user_id"
   end
 
+  create_table "opt_ins", force: :cascade do |t|
+    t.integer "location_id", null: false
+    t.string "name", null: false
+    t.string "email", null: false
+    t.string "phone"
+    t.integer "rating"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["location_id", "email"], name: "index_opt_ins_on_location_id_and_email"
+    t.index ["location_id"], name: "index_opt_ins_on_location_id"
+  end
+
   create_table "plans", force: :cascade do |t|
     t.string "slug", null: false
     t.string "name", null: false
@@ -139,5 +151,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_000005) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "feedback_submissions", "locations"
   add_foreign_key "locations", "users"
+  add_foreign_key "opt_ins", "locations"
   add_foreign_key "suggestions", "locations"
 end

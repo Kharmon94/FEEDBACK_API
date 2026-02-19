@@ -27,10 +27,12 @@ Rails.application.routes.draw do
       get "locations/public/:id", to: "locations#show_public", as: :location_public
       post "feedback", to: "feedback#create"
       post "suggestions", to: "suggestions#create"
+      post "opt_ins", to: "opt_ins#create"
 
       resources :locations, only: %i[index show create update destroy]
       resources :feedback, only: %i[index]
       resources :suggestions, only: %i[index]
+      get "opt_ins", to: "opt_ins#index"
       get "onboarding", to: "onboarding#show"
       put "onboarding", to: "onboarding#update"
       get "dashboard", to: "dashboard#show"

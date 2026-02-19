@@ -4,6 +4,7 @@ class UserMailer < ApplicationMailer
   def reset_password_instructions(user, raw_token)
     @user = user
     @reset_url = reset_password_url(raw_token)
+    Rails.logger.info "[UserMailer] Sending reset_password_instructions to #{user.email}, reset_url=#{@reset_url}"
     mail(to: user.email, subject: "Reset your password")
   end
 

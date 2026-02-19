@@ -6,6 +6,7 @@ class Location < ApplicationRecord
   belongs_to :user
   has_many :feedback_submissions, dependent: :destroy
   has_many :suggestions, dependent: :nullify
+  has_many :opt_ins, dependent: :destroy
 
   validates :name, presence: true
   before_validation :set_slug, on: :create

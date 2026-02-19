@@ -19,6 +19,11 @@ module Api
 
       def create
         authorize! :create, Location
+        plan = Plan.find_by(slug: current_user.plan)
+        limit = plan&.location_limit
+        if limit.present? && current_user.locations.count >= limit
+          return render json: { error: "Location limit reached for your plan. Please upgrade to add more locations." }, status: :forbidden
+        end
         location = current_user.locations.build(location_params.except(:logo))
         if location.save
           location.logo.attach(params[:logo]) if params[:logo].present?
