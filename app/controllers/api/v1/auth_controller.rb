@@ -140,13 +140,17 @@ module Api
       end
 
       def user_json(u)
+        trial_ends_at = (u.plan == "free" && u.created_at) ? (u.created_at + 30.days) : nil
         {
           id: u.id,
           email: u.email,
           name: u.name,
           business_name: u.business_name,
           plan: u.plan,
-          admin: u.admin
+          admin: u.admin,
+          created_at: u.created_at&.iso8601,
+          trial_ends_at: trial_ends_at&.iso8601,
+          has_payment_method: u.plan != "free"
         }
       end
 
