@@ -18,6 +18,10 @@ Rails.application.routes.draw do
   post "auth/password", to: "api/v1/auth#request_password_reset"
   put "auth/password", to: "api/v1/auth#reset_password"
   post "auth/confirm/resend", to: "api/v1/auth#resend_confirmation"
+  # Auth routes at root so host-only VITE_API_URL works for all flows
+  get "auth/me", to: "api/v1/auth#me"
+  post "auth/sign_in", to: "api/v1/auth#sign_in"
+  post "auth/sign_up", to: "api/v1/auth#sign_up"
 
   namespace :api do
     namespace :v1 do
