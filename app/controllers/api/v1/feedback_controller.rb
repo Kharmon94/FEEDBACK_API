@@ -17,9 +17,10 @@ module Api
         return render json: { error: "Location not found" }, status: :not_found unless location
         submission = location.feedback_submissions.build(feedback_params)
         if submission.save
-          if AdminSetting.instance.notify_on_new_feedback
+          owner = submission.location.user
+          if AdminSetting.instance.notify_on_new_feedback && owner.email_notifications_enabled?
             FeedbackMailer.new_feedback(submission).deliver_later
-            Rails.logger.info "[Feedback] Sent new_feedback email to #{submission.location.user.email}"
+            Rails.logger.info "[Feedback] Sent new_feedback email to #{owner.email}"
           end
           if submission.contact_me && submission.customer_email.present?
             FeedbackMailer.contact_me_acknowledgment(submission).deliver_later

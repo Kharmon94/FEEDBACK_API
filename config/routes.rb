@@ -46,6 +46,10 @@ Rails.application.routes.draw do
 
       get "plans", to: "plans#index"
 
+      resource :email_preferences, only: %i[show update], path: "email-preferences" do
+        get :unsubscribe, on: :collection
+      end
+
       namespace :admin do
         get "dashboard", to: "dashboard#index"
         resources :users, only: %i[index show create update] do

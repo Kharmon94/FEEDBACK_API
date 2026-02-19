@@ -1,5 +1,11 @@
-<p style="margin: 0 0 16px; color: #334155;">Hi<%= " #{@submission.customer_name}" if @submission.customer_name.present? %>,</p>
+<h1 style="margin: 0 0 20px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 28px; font-weight: 600; line-height: 36px; color: #000000;">
+  Hi <%= recipient_first_name %>,
+</h1>
 
-<p style="margin: 0 0 16px; color: #334155;">Thank you for your feedback. We've received your message and will be in touch soon.</p>
+<p style="margin: 0 0 16px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; color: #374151;">
+  Thank you for your feedback. We've received your message and will be in touch soon.
+</p>
 
-<p style="margin: 0; color: #64748b; font-size: 14px;">— <%= @location.name %></p>
+<p style="margin: 24px 0 0 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; color: #6b7280;">
+  — <%= @location.name %>
+</p>

@@ -53,4 +53,19 @@ class User < ApplicationRecord
     self.confirmation_sent_at = nil
     save!(validate: false)
   end
+
+  def email_notifications_enabled?
+    return true unless has_attribute?(:email_notifications_enabled)
+    self[:email_notifications_enabled] != false
+  end
+
+  def email_marketing_opted_out?
+    return false unless has_attribute?(:email_marketing_opt_out)
+    self[:email_marketing_opt_out] == true
+  end
+
+  def email_unsubscribe_token
+    payload = { user_id: id, exp: 7.days.from_now.to_i }
+    Rails.application.message_verifier(:email_unsubscribe).generate(payload)
+  end
 end
