@@ -4,7 +4,7 @@ class ApplicationMailer < ActionMailer::Base
   layout "mailer"
   after_action :set_default_from
 
-  helper_method :mailer_logo_url, :mailer_help_url, :mailer_preferences_url, :mailer_unsubscribe_url, :recipient_first_name, :recipient_email
+  helper_method :mailer_logo_url, :mailer_help_url, :mailer_preferences_url, :recipient_first_name, :recipient_email
 
   def default_url_options
     origin = ENV["FRONTEND_ORIGIN"].presence || ENV["API_ORIGIN"].presence || "https://www.feedback-page.com"
@@ -23,14 +23,6 @@ class ApplicationMailer < ActionMailer::Base
 
   def mailer_preferences_url
     "#{frontend_origin}/email-preferences"
-  end
-
-  def mailer_unsubscribe_url
-    u = instance_variable_get(:@user) || instance_variable_get(:@owner)
-    return mailer_preferences_url unless u.respond_to?(:email_unsubscribe_token)
-    api_origin = (ENV["API_ORIGIN"].presence || ENV["FRONTEND_ORIGIN"].presence || "https://www.feedback-page.com").to_s.gsub(%r{/$}, "")
-    api_origin = "https://#{api_origin}" unless api_origin.include?("://")
-    "#{api_origin}/api/v1/email-preferences/unsubscribe?token=#{CGI.escape(u.email_unsubscribe_token)}"
   end
 
   def recipient_first_name
