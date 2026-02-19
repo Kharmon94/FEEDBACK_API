@@ -49,7 +49,7 @@ module Api
         oauth_url = "#{origin}/api/v1/auth/google_oauth2"
         html = <<~HTML
           <!DOCTYPE html>
-          <html><head><meta http-equiv="refresh" content="0;url=#{ERB::Util.html_escape(oauth_url)}"></head>
+          <html><head><meta http-equiv="refresh" content="2;url=#{ERB::Util.html_escape(oauth_url)}"></head>
           <body>Redirecting to Google…</body></html>
         HTML
         render html: html.html_safe, content_type: "text/html"

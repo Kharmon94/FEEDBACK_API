@@ -45,9 +45,9 @@ module FeedbackApi
     config.middleware.use ActionDispatch::Cookies
     session_options = { key: "_feedback_api_session" }
     if Rails.env.production?
-      # Allow session cookie when Google redirects back (cross-site). Requires secure.
-      session_options[:same_site] = :none
       session_options[:secure] = true
+      # Lax allows cookie on top-level redirect from Google; None can be blocked by Safari/ITP.
+      session_options[:same_site] = :lax
     end
     config.middleware.use ActionDispatch::Session::CookieStore, **session_options
   end

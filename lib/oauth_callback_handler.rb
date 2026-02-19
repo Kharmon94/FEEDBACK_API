@@ -22,6 +22,7 @@ class OauthCallbackHandler
     omniauth_error = env["omniauth.error"]
     error_type = omniauth_error&.respond_to?(:error) ? omniauth_error.error : "authentication_failed"
     error_desc = omniauth_error&.respond_to?(:message) ? omniauth_error.message : nil
+    Rails.logger.warn "[OAuth] Callback failed: type=#{error_type} desc=#{error_desc} error_class=#{omniauth_error&.class}"
     query = "error=#{CGI.escape(error_type)}"
     query += "&error_description=#{CGI.escape(error_desc)}" if error_desc.present?
     redirect_to("#{frontend}/auth/callback?#{query}")
