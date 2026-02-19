@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  # OAuth is handled by OauthCallbackHandler + User.from_omniauth, not Devise omniauthable.
+  # OAuth is handled by GoogleOauthController + User.from_omniauth, not Devise omniauthable.
   # Keeping omniauthable caused "Could not find a valid mapping for path" when OmniAuth failed.
 
   has_many :locations, dependent: :destroy

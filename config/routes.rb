@@ -1,15 +1,14 @@
 # Routes updated 2026-02-19
-# OMNIAUTH_APP must be defined before mount; load the initializer explicitly
-# since routes may load before config/initializers on some environments (e.g. Railway).
-require_relative "initializers/omniauth"
-
 Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
   get "up" => "health#show", as: :rails_health_check
 
+  # OmniAuth callback (default /auth paths)
+  get "auth/:provider/callback", to: "api/v1/google_oauth#callback"
+  get "auth/google_oauth2", to: "api/v1/google_oauth#redirect_if_not_configured"
+
   # Auth without /api/v1 prefix (for frontends that use base URL without path)
-  # Email/password routes only; OAuth is at /api/v1/auth
   post "auth/password", to: "api/v1/auth#request_password_reset"
   put "auth/password", to: "api/v1/auth#reset_password"
   post "auth/confirm/resend", to: "api/v1/auth#resend_confirmation"
@@ -21,13 +20,6 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get "up" => "health#show"
-
-      # OmniAuth for Google OAuth at /api/v1/auth/google_oauth2 and callback
-      mount OMNIAUTH_APP, at: "auth", constraints: ->(req) {
-        p = req.path
-        return false unless req.get?
-        p == "/api/v1/auth/failure" || p.match?(%r{\A/api/v1/auth/(?!sign_in|sign_up|me|password|confirm)([^/]+)(/callback)?\z})
-      }
 
       post "auth/sign_in", to: "auth#sign_in"
       post "auth/sign_up", to: "auth#sign_up"

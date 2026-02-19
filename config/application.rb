@@ -50,5 +50,16 @@ module FeedbackApi
       session_options[:same_site] = :lax
     end
     config.middleware.use ActionDispatch::Session::CookieStore, **session_options
+
+    # OmniAuth for Google OAuth (after session so state validation works)
+    if ENV["GOOGLE_CLIENT_ID"].present? && ENV["GOOGLE_CLIENT_SECRET"].present?
+      config.middleware.use OmniAuth::Builder do
+        provider :google_oauth2,
+          ENV["GOOGLE_CLIENT_ID"],
+          ENV["GOOGLE_CLIENT_SECRET"],
+          scope: "email,profile"
+      end
+    end
+    OmniAuth.config.allowed_request_methods = %i[get]
   end
 end

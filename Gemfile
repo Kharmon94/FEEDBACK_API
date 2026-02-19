@@ -24,6 +24,7 @@ gem "devise"
 gem "jwt"
 gem "omniauth"
 gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
 gem "cancancan"
 
 gem "aws-sdk-s3", require: false
