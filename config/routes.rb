@@ -9,12 +9,7 @@ Rails.application.routes.draw do
   get "up" => "health#show", as: :rails_health_check
 
   # Auth without /api/v1 prefix (for frontends that use base URL without path)
-  # OmniAuth handles GET /auth/:provider and /auth/:provider/callback, /auth/failure only
-  mount OMNIAUTH_APP, at: "auth", constraints: ->(req) {
-    p = req.path
-    return false unless req.get?
-    p == "/auth/failure" || p.match?(%r{\A/auth/(?!sign_in|sign_up|me|password|confirm)([^/]+)(/callback)?\z})
-  }
+  # Email/password routes only; OAuth is at /api/v1/auth
   post "auth/password", to: "api/v1/auth#request_password_reset"
   put "auth/password", to: "api/v1/auth#reset_password"
   post "auth/confirm/resend", to: "api/v1/auth#resend_confirmation"
@@ -26,6 +21,13 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get "up" => "health#show"
+
+      # OmniAuth for Google OAuth at /api/v1/auth/google_oauth2 and callback
+      mount OMNIAUTH_APP, at: "auth", constraints: ->(req) {
+        p = req.path
+        return false unless req.get?
+        p == "/api/v1/auth/failure" || p.match?(%r{\A/api/v1/auth/(?!sign_in|sign_up|me|password|confirm)([^/]+)(/callback)?\z})
+      }
 
       post "auth/sign_in", to: "auth#sign_in"
       post "auth/sign_up", to: "auth#sign_up"
