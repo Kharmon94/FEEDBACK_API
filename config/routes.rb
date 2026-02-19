@@ -45,8 +45,6 @@ Rails.application.routes.draw do
       get "auth/confirm", to: "auth#confirm_email"
       post "auth/confirm/resend", to: "auth#resend_confirmation"
       get "auth/me", to: "auth#me"
-      get "auth/:provider/callback", to: "auth#omniauth_callback"
-      get "auth/failure", to: "auth#failure"
 
       get "locations/public/:id", to: "locations#show_public", as: :location_public
       post "feedback", to: "feedback#create"

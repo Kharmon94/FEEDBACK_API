@@ -55,33 +55,6 @@ module Api
         render html: html.html_safe, content_type: "text/html"
       end
 
-      def omniauth_callback
-        auth = request.env["omniauth.auth"]
-        if auth.blank?
-          # Session may have been lost on redirect from Google (e.g. cookie SameSite). Send user to failure.
-          return failure
-        end
-        was_new = User.find_by(provider: auth.provider, uid: auth.uid).nil?
-        user = User.from_omniauth(auth)
-        UserMailer.welcome(user).deliver_later if was_new
-        token = JwtService.encode({ user_id: user.id })
-        frontend_origin = ENV["FRONTEND_ORIGIN"].to_s.gsub(%r{/$}, "")
-        if frontend_origin.present?
-          redirect_to "#{frontend_origin}/auth/callback?token=#{CGI.escape(token)}", allow_other_host: true
-        else
-          render_auth(user)
-        end
-      end
-
-      def failure
-        frontend_origin = ENV["FRONTEND_ORIGIN"].to_s.gsub(%r{/$}, "")
-        if frontend_origin.present?
-          redirect_to "#{frontend_origin}/auth/callback?error=authentication_failed", allow_other_host: true
-        else
-          render json: { error: "Authentication failed" }, status: :unauthorized
-        end
-      end
-
       def request_password_reset
         user = User.find_by(email: params[:email]&.to_s&.downcase)
         if user
