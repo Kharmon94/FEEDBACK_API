@@ -72,20 +72,15 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: host, protocol: "https" }
 
   if ENV["SENDGRID_SECRET"].present?
-    config.action_mailer.delivery_method = :smtp
-    config.action_mailer.smtp_settings = {
-      address: "smtp.sendgrid.net",
-      port: 587,
-      domain: ENV.fetch("MAILER_DOMAIN", "feedback-page.com"),
-      authentication: :plain,
-      user_name: "apikey",
-      password: ENV["SENDGRID_SECRET"],
-      enable_starttls_auto: true
+    config.action_mailer.delivery_method = :sendgrid_actionmailer
+    config.action_mailer.sendgrid_actionmailer_settings = {
+      api_key: ENV["SENDGRID_SECRET"],
+      raise_delivery_errors: true
     }
     config.action_mailer.raise_delivery_errors = true
     config.after_initialize do
       from = ENV["MAILER_FROM"].presence || (AdminSetting.instance.support_email rescue nil)
-      Rails.logger.info "[ActionMailer] Production emails enabled (SMTP SendGrid), from: #{from}"
+      Rails.logger.info "[ActionMailer] Production emails enabled (SendGrid API), from: #{from}"
     end
   else
     config.action_mailer.delivery_method = :test
