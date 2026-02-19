@@ -9,7 +9,8 @@ require Rails.root.join("lib/oauth_callback_handler.rb")
 # Ensure callback URL uses correct API origin (needed when behind proxy).
 api_origin = (ENV["API_ORIGIN"].presence || "").gsub(%r{/$}, "")
 OmniAuth.config.full_host = api_origin.presence
-OmniAuth.config.path_prefix = "/api/v1/auth"
+# Empty prefix: mount at /api/v1/auth provides script_name, so path becomes /api/v1/auth/google_oauth2
+OmniAuth.config.path_prefix = ""
 
 # Redirect OmniAuth failures to frontend instead of default failure page.
 OmniAuth.config.on_failure = lambda { |env|
