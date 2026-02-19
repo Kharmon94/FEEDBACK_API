@@ -70,7 +70,12 @@ module Api
       def request_password_reset
         user = User.find_by(email: params[:email]&.to_s&.downcase)
         if user
-          user.send_reset_password_instructions
+          begin
+            user.send_reset_password_instructions
+          rescue => e
+            Rails.logger.error "[Auth] Password reset email failed for #{user.email}: #{e.class} #{e.message}"
+            Rails.logger.error e.backtrace.first(5).join("\n")
+          end
         end
         render json: { message: "If an account exists with that email, you will receive password reset instructions." }, status: :ok
       end
@@ -93,7 +98,12 @@ module Api
         if user&.confirmed?
           render json: { message: "Email is already confirmed. You can sign in." }, status: :ok
         elsif user
-          user.send_confirmation_instructions
+          begin
+            user.send_confirmation_instructions
+          rescue => e
+            Rails.logger.error "[Auth] Confirmation email failed for #{user.email}: #{e.class} #{e.message}"
+            Rails.logger.error e.backtrace.first(5).join("\n")
+          end
           render json: { message: "If an account exists with that email, you will receive confirmation instructions." }, status: :ok
         else
           render json: { message: "If an account exists with that email, you will receive confirmation instructions." }, status: :ok
