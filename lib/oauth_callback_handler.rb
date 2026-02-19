@@ -18,8 +18,13 @@ class OauthCallbackHandler
       return redirect_to("#{frontend}/auth/callback?token=#{CGI.escape(token)}")
     end
 
-    # Failure or missing auth (e.g. OmniAuth redirected to /failure)
-    redirect_to("#{frontend}/auth/callback?error=authentication_failed")
+    # Failure or missing auth (e.g. session lost on redirect, user denied)
+    omniauth_error = env["omniauth.error"]
+    error_type = omniauth_error&.respond_to?(:error) ? omniauth_error.error : "authentication_failed"
+    error_desc = omniauth_error&.respond_to?(:message) ? omniauth_error.message : nil
+    query = "error=#{CGI.escape(error_type)}"
+    query += "&error_description=#{CGI.escape(error_desc)}" if error_desc.present?
+    redirect_to("#{frontend}/auth/callback?#{query}")
   end
 
   private

@@ -6,6 +6,10 @@ require "omniauth"
 require "omniauth-google-oauth2"
 require Rails.root.join("lib/oauth_callback_handler.rb")
 
+# Ensure callback URL uses correct API origin (needed when behind proxy).
+api_origin = (ENV["API_ORIGIN"].presence || "").gsub(%r{/$}, "")
+OmniAuth.config.full_host = api_origin.presence
+
 handler = OauthCallbackHandler.new
 
 # Avoid "already initialized constant" when loaded from routes.rb and again by Rails
