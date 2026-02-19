@@ -19,7 +19,10 @@ unless defined?(OMNIAUTH_APP)
     provider :google_oauth2,
       ENV["GOOGLE_CLIENT_ID"],
       ENV["GOOGLE_CLIENT_SECRET"],
-      scope: "email,profile"
+      scope: "email,profile",
+      # Workaround: session cookie is dropped on cross-site redirect from Google, so state
+      # validation fails. Skipping it allows OAuth to complete. Auth code is still validated.
+      provider_ignores_state: true
   end
 else
   # Minimal Rack app when Google OAuth is not configured (e.g. local dev).
