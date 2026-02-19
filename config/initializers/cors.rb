@@ -20,6 +20,7 @@ origins << %r{\Ahttps://[a-z0-9-]+\.up\.railway\.app\z}
 origins << %r{\Ahttps://(www\.)?feedback-page\.com\z}
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  # Specific origins (from FRONTEND_ORIGIN + localhost + regex patterns)
   allow do
     origins origins
     resource "*",
@@ -27,5 +28,17 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
       methods: %i[get post put patch delete options head],
       expose: ["Authorization"],
       max_age: 600
+  end
+
+  # Fallback: allow any origin when CORS_ANY_ORIGIN=1 (for debugging CORS issues).
+  # Remove or set to 0 in production once CORS is working.
+  if ENV["CORS_ANY_ORIGIN"] == "1"
+    allow do
+      origins "*"
+      resource "*",
+        headers: :any,
+        methods: %i[get post put patch delete options head],
+        expose: ["Authorization"]
+    end
   end
 end
