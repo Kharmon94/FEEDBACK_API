@@ -37,6 +37,7 @@ module Api
 
       def me
         authenticate_user!
+        return if performed?
         render json: { user: user_json(current_user) }, status: :ok
       end
 
@@ -123,6 +124,7 @@ module Api
       end
 
       def user_json(u)
+        return nil if u.nil?
         trial_ends_at = (u.plan == "free" && u.created_at) ? (u.created_at + 30.days) : nil
         {
           id: u.id,
