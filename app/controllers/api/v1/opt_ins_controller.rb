@@ -13,6 +13,19 @@ module Api
         render json: { opt_ins: opt_ins.map { |o| opt_in_json(o) } }, status: :ok
       end
 
+      def show
+        opt_in = OptIn.joins(:location).find_by!(id: params[:id], locations: { user_id: current_user.id })
+        authorize! :read, opt_in
+        render json: { opt_in: opt_in_json(opt_in) }, status: :ok
+      end
+
+      def destroy
+        opt_in = OptIn.joins(:location).find_by!(id: params[:id], locations: { user_id: current_user.id })
+        authorize! :destroy, opt_in
+        opt_in.destroy!
+        head :no_content
+      end
+
       def create
         authorize! :create, OptIn
         location = Location.find_by(id: params[:location_id]) || Location.find_by(slug: params[:location_id])

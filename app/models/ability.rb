@@ -21,6 +21,7 @@ class Ability
     can :manage, Location, user_id: user.id
     can :manage, FeedbackSubmission, location: { user_id: user.id }
     can :read, FeedbackSubmission # for index
+    can :manage, OptIn, location: { user_id: user.id }
     can :read, OptIn # for index; controller scopes to user's locations
     can :manage, Suggestion, location: { user_id: user.id }
     can :read, Suggestion # for index

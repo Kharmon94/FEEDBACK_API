@@ -11,6 +11,19 @@ module Api
         render json: { suggestions: suggestions.map { |s| suggestion_json(s) } }, status: :ok
       end
 
+      def show
+        suggestion = Suggestion.joins(:location).find_by!(id: params[:id], locations: { user_id: current_user.id })
+        authorize! :read, suggestion
+        render json: { suggestion: suggestion_json(suggestion) }, status: :ok
+      end
+
+      def destroy
+        suggestion = Suggestion.joins(:location).find_by!(id: params[:id], locations: { user_id: current_user.id })
+        authorize! :destroy, suggestion
+        suggestion.destroy!
+        head :no_content
+      end
+
       def create
         authorize! :create, Suggestion
         suggestion = Suggestion.new(suggestion_params)

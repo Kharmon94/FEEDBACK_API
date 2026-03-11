@@ -36,8 +36,8 @@ Rails.application.routes.draw do
 
       resources :locations, only: %i[index show create update destroy]
       resources :feedback, only: %i[index]
-      resources :suggestions, only: %i[index]
-      get "opt_ins", to: "opt_ins#index"
+      resources :suggestions, only: %i[index show destroy]
+      resources :opt_ins, only: %i[index show destroy]
       get "onboarding", to: "onboarding#show"
       put "onboarding", to: "onboarding#update"
       get "dashboard", to: "dashboard#show"
