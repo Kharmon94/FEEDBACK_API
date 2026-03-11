@@ -2,14 +2,39 @@
 
 class ApplicationMailer < ActionMailer::Base
   layout "mailer"
+
+  # Renders a design template from email-templates/ with {{variable}} substitution.
+  # Supports {{#if var}}...{{/if}} for optional content.
+  # Variables hash keys can be symbols or strings.
+  def render_design_template(template_path, variables = {})
+    base = Rails.root.join("email-templates")
+    full_path = base.join("#{template_path}.html")
+    raise "Design template not found: #{full_path}" unless File.exist?(full_path)
+
+    html = File.read(full_path)
+    vars = variables.transform_keys(&:to_s)
+
+    # Process {{#if var}}...{{/if}} blocks first
+    html = html.gsub(/\{\{#if\s+(\w+)\}\}(.*?)\{\{\/if\}\}/m) do
+      key = Regexp.last_match(1)
+      inner = Regexp.last_match(2)
+      val = vars[key]
+      val.present? ? inner : ""
+    end
+
+    # Replace {{key}} with values
+    vars.each do |key, value|
+      html = html.gsub("{{#{key}}}", value.to_s)
+    end
+
+    html.html_safe
+  end
   after_action :set_default_from
 
   helper_method :mailer_logo_url, :mailer_help_url, :mailer_preferences_url, :recipient_first_name, :recipient_email
 
   def default_url_options
-    origin = ENV["FRONTEND_ORIGIN"].presence || ENV["API_ORIGIN"].presence || "https://www.feedback-page.com"
-    origin = "https://#{origin}" unless origin.include?("://")
-    uri = URI.parse(origin)
+    uri = URI.parse(frontend_origin)
     { host: uri.host, protocol: uri.scheme }
   end
 
@@ -57,8 +82,16 @@ class ApplicationMailer < ActionMailer::Base
   private
 
   def frontend_origin
-    origin = (ENV["FRONTEND_ORIGIN"].presence || ENV["API_ORIGIN"].presence || "https://www.feedback-page.com").to_s.gsub(%r{/$}, "")
-    origin.include?("://") ? origin : "https://#{origin}"
+    normalize_origin(ENV["FRONTEND_ORIGIN"].presence || ENV["API_ORIGIN"].presence || "https://www.feedback-page.com")
+  end
+
+  def api_origin
+    normalize_origin(ENV["API_ORIGIN"].presence || "https://www.feedback-page.com")
+  end
+
+  def normalize_origin(url)
+    url = url.to_s.gsub(%r{/$}, "")
+    url.include?("://") ? url : "https://#{url}"
   end
 
   def set_default_from

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You for Your Feedback</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f8f9fa;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8f9fa;">
+        <tr>
+            <td style="padding: 40px 20px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                    <tr>
+                        <td style="background-color: #000000; padding: 40px 30px; text-align: center;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">{{business_name}}</h1>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding: 50px 40px;">
+                            <div style="text-align: center; margin-bottom: 30px;">
+                                <div style="display: inline-block; width: 80px; height: 80px; background-color: #000000; border-radius: 50%; line-height: 80px; text-align: center;">
+                                    <span style="font-size: 40px;">✓</span>
+                                </div>
+                            </div>
+                            
+                            <h2 style="margin: 0 0 20px 0; color: #000000; font-size: 24px; font-weight: 600; text-align: center;">Thank You for Your Feedback</h2>
+                            
+                            <p style="margin: 0 0 20px 0; color: #4b5563; font-size: 16px; line-height: 1.6; text-align: center;">
+                                Hi{{#if customer_name}} <strong>{{customer_name}}</strong>{{/if}},
+                            </p>
+                            
+                            <p style="margin: 0 0 30px 0; color: #4b5563; font-size: 16px; line-height: 1.6; text-align: center;">
+                                We've received your feedback and we truly appreciate you taking the time to share your experience with us.
+                            </p>
+                            
+                            <div style="margin-bottom: 30px; padding: 25px; background-color: #f8f9fa; border-radius: 12px;">
+                                <p style="margin: 0 0 15px 0; color: #000000; font-size: 16px; font-weight: 700; text-align: center;">We're Working to Improve</p>
+                                <p style="margin: 0; color: #6b7280; font-size: 14px; line-height: 1.6; text-align: center;">
+                                    Your feedback helps us understand where we can do better. Our team is reviewing your comments and will take appropriate action to enhance your experience.
+                                </p>
+                            </div>
+                            
+                            <div style="margin-bottom: 30px; padding: 20px; background-color: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 8px;">
+                                <p style="margin: 0; color: #1e40af; font-size: 14px; line-height: 1.6;">
+                                    <strong>Want to discuss this further?</strong><br>
+                                    Feel free to reach out to us directly at <a href="mailto:{{business_email}}" style="color: #1e40af; font-weight: 600;">{{business_email}}</a>{{#if business_phone}} or call us at <strong>{{business_phone}}</strong>{{/if}}.
+                                </p>
+                            </div>
+                            
+                            <p style="margin: 0; color: #4b5563; font-size: 16px; line-height: 1.6; text-align: center;">
+                                Thank you for helping us serve you better!
+                            </p>
+                            
+                            <p style="margin: 20px 0 0 0; color: #4b5563; font-size: 16px; line-height: 1.6; text-align: center;">
+                                Best regards,<br>
+                                <strong>The {{business_name}} Team</strong>
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding: 30px 40px; background-color: #f8f9fa; border-top: 1px solid #e5e7eb; text-align: center;">
+                            <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 13px;">
+                                {{business_name}}<br>
+                                {{#if business_address}}{{business_address}}<br>{{/if}}
+                                {{#if business_phone}}{{business_phone}} | {{/if}}{{#if business_email}}{{business_email}}{{/if}}
+                            </p>
+                            <p style="margin: 10px 0 0 0; color: #9ca3af; font-size: 11px;">
+                                Powered by <a href="https://feedback-page.com" style="color: #9ca3af; text-decoration: none;">Feedback Page</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

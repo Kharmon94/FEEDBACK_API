@@ -26,7 +26,8 @@ module Api
             :enable_email_verification,
             :enable_social_login,
             :notify_on_new_feedback,
-            :notify_on_new_suggestion
+            :notify_on_new_suggestion,
+            :notify_on_new_optin
           )
         end
 
@@ -39,7 +40,8 @@ module Api
             enable_email_verification: record.enable_email_verification,
             enable_social_login: record.enable_social_login,
             notify_on_new_feedback: record.notify_on_new_feedback,
-            notify_on_new_suggestion: record.notify_on_new_suggestion
+            notify_on_new_suggestion: record.notify_on_new_suggestion,
+            notify_on_new_optin: record.respond_to?(:notify_on_new_optin) ? record.notify_on_new_optin : true
           }
         end
       end

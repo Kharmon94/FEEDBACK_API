@@ -10,7 +10,8 @@ class AdminSetting < ApplicationRecord
       enable_email_verification: false,
       enable_social_login: true,
       notify_on_new_feedback: true,
-      notify_on_new_suggestion: true
+      notify_on_new_suggestion: true,
+      notify_on_new_optin: true
     )
   end
 end

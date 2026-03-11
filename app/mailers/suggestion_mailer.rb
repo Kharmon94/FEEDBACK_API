@@ -7,15 +7,18 @@ class SuggestionMailer < ApplicationMailer
     @owner = @location&.user
     return if @location.blank? || @owner.blank?
 
-    @suggestions_url = suggestions_url
-    mail(to: @owner.email, subject: "New suggestion for #{@location.name}")
-  end
-
-  private
-
-  def suggestions_url
-    origin = (ENV["FRONTEND_ORIGIN"].presence || "https://www.feedback-page.com").gsub(%r{/$}, "")
-    origin = "https://#{origin}" unless origin.include?("://")
-    "#{origin}/dashboard"
+    origin = frontend_origin
+    variables = {
+      business_name: @location.name,
+      customer_name: suggestion.submitter_email.present? ? suggestion.submitter_email.split("@").first : "Anonymous",
+      customer_email: suggestion.submitter_email.presence || "Not provided",
+      suggestion_date: suggestion.created_at.strftime("%B %d, %Y"),
+      suggestion_text: suggestion.content.to_s,
+      view_suggestion_url: "#{origin}/dashboard?tab=feedback"
+    }
+    html = render_design_template("feedback/new-suggestion", variables)
+    mail(to: @owner.email, subject: "New suggestion for #{@location.name}") do |format|
+      format.html { render html: html, layout: false }
+    end
   end
 end

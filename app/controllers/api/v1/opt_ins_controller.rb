@@ -20,6 +20,11 @@ module Api
 
         opt_in = location.opt_ins.build(opt_in_params)
         if opt_in.save
+          owner = location.user
+          if owner.present? && AdminSetting.instance.respond_to?(:notify_on_new_optin) && AdminSetting.instance.notify_on_new_optin && owner.email_notifications_enabled?
+            OptInMailer.new_optin(opt_in).deliver_later
+          end
+          OptInMailer.optin_confirmation(opt_in).deliver_later
           render json: { opt_in: opt_in_json(opt_in) }, status: :created
         else
           render json: { error: opt_in.errors.full_messages }, status: :unprocessable_entity

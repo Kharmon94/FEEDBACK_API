@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Feedback Page!</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f8f9fa;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8f9fa;">
+        <tr>
+            <td style="padding: 40px 20px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background-color: #16a34a; padding: 40px 30px; text-align: center;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">✓ Payment Successful!</h1>
+                        </td>
+                    </tr>
+                    
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 50px 40px;">
+                            <h2 style="margin: 0 0 20px 0; color: #000000; font-size: 24px; font-weight: 600;">Welcome to Feedback Page! 🎉</h2>
+                            
+                            <p style="margin: 0 0 20px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                Hi <strong>{{business_name}}</strong>,
+                            </p>
+                            
+                            <p style="margin: 0 0 30px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                Thank you for subscribing to Feedback Page! Your payment has been processed successfully and your account is now fully active.
+                            </p>
+                            
+                            <!-- Plan Details -->
+                            <div style="margin-bottom: 30px; padding: 25px; background: linear-gradient(135deg, #000000 0%, #374151 100%); border-radius: 12px;">
+                                <p style="margin: 0 0 15px 0; color: #ffffff; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Your Plan</p>
+                                
+                                <p style="margin: 0 0 5px 0; color: #ffffff; font-size: 24px; font-weight: 700;">{{plan_name}} Plan</p>
+                                <p style="margin: 0 0 20px 0; color: #d1d5db; font-size: 16px;">{{price}}/{{billing_cycle}}</p>
+                                
+                                <div style="border-top: 1px solid #4b5563; padding-top: 15px;">
+                                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                        <tr>
+                                            <td style="padding: 5px 0;">
+                                                <p style="margin: 0; color: #d1d5db; font-size: 14px;">Next billing date:</p>
+                                            </td>
+                                            <td style="padding: 5px 0; text-align: right;">
+                                                <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: 600;">{{next_billing_date}}</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Invoice Details -->
+                            <div style="margin-bottom: 30px; padding: 25px; background-color: #f8f9fa; border-radius: 12px;">
+                                <p style="margin: 0 0 15px 0; color: #000000; font-size: 16px; font-weight: 700;">Payment Receipt</p>
+                                
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;">
+                                            <p style="margin: 0; color: #6b7280; font-size: 14px;">Invoice #</p>
+                                        </td>
+                                        <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">
+                                            <p style="margin: 0; color: #000000; font-size: 14px; font-weight: 600;">{{invoice_number}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;">
+                                            <p style="margin: 0; color: #6b7280; font-size: 14px;">Date</p>
+                                        </td>
+                                        <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">
+                                            <p style="margin: 0; color: #000000; font-size: 14px; font-weight: 600;">{{payment_date}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;">
+                                            <p style="margin: 0; color: #6b7280; font-size: 14px;">Payment Method</p>
+                                        </td>
+                                        <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">
+                                            <p style="margin: 0; color: #000000; font-size: 14px; font-weight: 600;">{{payment_method}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px 0;">
+                                            <p style="margin: 0; color: #000000; font-size: 16px; font-weight: 700;">Total Paid</p>
+                                        </td>
+                                        <td style="padding: 12px 0; text-align: right;">
+                                            <p style="margin: 0; color: #000000; font-size: 18px; font-weight: 700;">{{amount}}</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <!-- CTA Button -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 30px;">
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <a href="{{dashboard_url}}" style="display: inline-block; padding: 16px 40px; background-color: #000000; color: #ffffff; text-decoration: none; border-radius: 12px; font-size: 16px; font-weight: 600;">Go to Dashboard</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 20px;">
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <a href="{{invoice_url}}" style="color: #000000; font-size: 14px; font-weight: 600; text-decoration: underline;">Download Invoice (PDF)</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <p style="margin: 0 0 20px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                Thank you for your business! If you have any questions about your subscription, please don't hesitate to contact us.
+                            </p>
+                            
+                            <p style="margin: 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                Best regards,<br>
+                                <strong>The Feedback Page Team</strong>
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 30px 40px; background-color: #f8f9fa; border-top: 1px solid #e5e7eb;">
+                            <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 13px; text-align: center;">
+                                Manage your subscription in your <a href="{{billing_url}}" style="color: #000000; font-weight: 600;">billing settings</a>
+                            </p>
+                            <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 13px; text-align: center;">
+                                Feedback Page<br>
+                                <a href="https://feedback-page.com" style="color: #6b7280; text-decoration: none;">feedback-page.com</a>
+                            </p>
+                            <p style="margin: 0; color: #9ca3af; font-size: 12px; text-align: center;">
+                                © 2026 Feedback Page. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

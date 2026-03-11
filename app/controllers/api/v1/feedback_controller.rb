@@ -18,7 +18,7 @@ module Api
         submission = location.feedback_submissions.build(feedback_params)
         if submission.save
           owner = submission.location.user
-          if AdminSetting.instance.notify_on_new_feedback && owner.email_notifications_enabled?
+          if AdminSetting.instance.notify_on_new_feedback && owner.email_notifications_enabled? && submission.rating <= 3
             FeedbackMailer.new_feedback(submission).deliver_later
             Rails.logger.info "[Feedback] Sent new_feedback email to #{owner.email}"
           end

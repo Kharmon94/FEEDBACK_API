@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Upgraded</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f8f9fa;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8f9fa;">
+        <tr>
+            <td style="padding: 40px 20px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                    <tr>
+                        <td style="background-color: #16a34a; padding: 40px 30px; text-align: center;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">🎉 Plan Upgraded!</h1>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding: 50px 40px;">
+                            <h2 style="margin: 0 0 20px 0; color: #000000; font-size: 24px; font-weight: 600;">Welcome to {{new_plan_name}}!</h2>
+                            
+                            <p style="margin: 0 0 20px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                Hi <strong>{{business_name}}</strong>,
+                            </p>
+                            
+                            <p style="margin: 0 0 30px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                Great news! Your plan has been successfully upgraded to <strong>{{new_plan_name}}</strong>. You now have access to all the enhanced features!
+                            </p>
+                            
+                            <div style="margin-bottom: 30px; padding: 25px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 12px; border: 2px solid #16a34a;">
+                                <p style="margin: 0 0 15px 0; color: #166534; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">New Features Unlocked</p>
+                                
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 6px 0;">
+                                            <p style="margin: 0; color: #166534; font-size: 15px;">✓ {{feature_1}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 6px 0;">
+                                            <p style="margin: 0; color: #166534; font-size: 15px;">✓ {{feature_2}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 6px 0;">
+                                            <p style="margin: 0; color: #166534; font-size: 15px;">✓ {{feature_3}}</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <div style="margin-bottom: 30px; padding: 25px; background-color: #f8f9fa; border-radius: 12px;">
+                                <p style="margin: 0 0 15px 0; color: #000000; font-size: 16px; font-weight: 700;">Billing Summary</p>
+                                
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;">
+                                            <p style="margin: 0; color: #6b7280; font-size: 14px;">Previous Plan:</p>
+                                        </td>
+                                        <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">
+                                            <p style="margin: 0; color: #6b7280; font-size: 14px; text-decoration: line-through;">{{old_plan_name}} - {{old_price}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;">
+                                            <p style="margin: 0; color: #000000; font-size: 14px; font-weight: 600;">New Plan:</p>
+                                        </td>
+                                        <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">
+                                            <p style="margin: 0; color: #000000; font-size: 14px; font-weight: 600;">{{new_plan_name}} - {{new_price}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;">
+                                            <p style="margin: 0; color: #6b7280; font-size: 14px;">Prorated Charge:</p>
+                                        </td>
+                                        <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">
+                                            <p style="margin: 0; color: #000000; font-size: 14px; font-weight: 600;">{{prorated_amount}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px 0;">
+                                            <p style="margin: 0; color: #000000; font-size: 14px;">Next Billing Date:</p>
+                                        </td>
+                                        <td style="padding: 12px 0; text-align: right;">
+                                            <p style="margin: 0; color: #000000; font-size: 14px; font-weight: 600;">{{next_billing_date}}</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 20px;">
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <a href="{{dashboard_url}}" style="display: inline-block; padding: 16px 40px; background-color: #000000; color: #ffffff; text-decoration: none; border-radius: 12px; font-size: 16px; font-weight: 600;">Explore New Features</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding: 30px 40px; background-color: #f8f9fa; border-top: 1px solid #e5e7eb;">
+                            <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 13px; text-align: center;">
+                                Feedback Page<br>
+                                <a href="https://feedback-page.com" style="color: #6b7280; text-decoration: none;">feedback-page.com</a>
+                            </p>
+                            <p style="margin: 0; color: #9ca3af; font-size: 12px; text-align: center;">
+                                © 2026 Feedback Page. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

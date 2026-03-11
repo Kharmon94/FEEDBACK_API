@@ -1088,3 +1088,17 @@ FOREIGN KEY ("location_id")
   [1m[36mTRANSACTION (8.1ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
   [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
 OmniAuth Google: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET missing. Google sign-in disabled.
+  [1m[36mActiveRecord::InternalMetadata Load (7.3ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to AddEmailPreferencesToUsers (20260219000007)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (2.8ms)[0m  [1m[35mALTER TABLE "users" ADD "email_notifications_enabled" boolean DEFAULT 1 NOT NULL[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "users" ADD "email_marketing_opt_out" boolean DEFAULT 0 NOT NULL[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260219000007') RETURNING "version"[0m
+  [1m[36mTRANSACTION (12.3ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+Migrating to AddNotifyOnNewOptinToAdminSettings (20260219000008)
+  [1m[36mTRANSACTION (4.4ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (7.1ms)[0m  [1m[35mALTER TABLE "admin_settings" ADD "notify_on_new_optin" boolean DEFAULT 1 NOT NULL[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260219000008') RETURNING "version"[0m
+  [1m[36mTRANSACTION (4.1ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mActiveRecord::SchemaMigration Load (2.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
