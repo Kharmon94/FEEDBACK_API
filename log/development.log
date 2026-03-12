@@ -1102,3 +1102,26 @@ Migrating to AddNotifyOnNewOptinToAdminSettings (20260219000008)
   [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260219000008') RETURNING "version"[0m
   [1m[36mTRANSACTION (4.1ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
   [1m[36mActiveRecord::SchemaMigration Load (2.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (7.2ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (3.9ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to AddDeviceAndLocationToFeedbackSubmissions (20260220000001)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (2.5ms)[0m  [1m[35mALTER TABLE "feedback_submissions" ADD "device_type" varchar[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "feedback_submissions" ADD "country" varchar[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "feedback_submissions" ADD "region" varchar[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260220000001') RETURNING "version"[0m
+  [1m[36mTRANSACTION (8.8ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+Migrating to CreateFeedbackPageEvents (20260220000002)
+  [1m[36mTRANSACTION (2.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (4.4ms)[0m  [1m[35mCREATE TABLE "feedback_page_events" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "location_id" integer NOT NULL, "event_type" varchar NOT NULL, "rating" integer, "device_type" varchar, "country" varchar, "region" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_36ac826c97"
+FOREIGN KEY ("location_id")
+  REFERENCES "locations" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_feedback_page_events_on_location_id" ON "feedback_page_events" ("location_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_feedback_page_events_on_location_event_created" ON "feedback_page_events" ("location_id", "event_type", "created_at")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (3.9ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260220000002') RETURNING "version"[0m
+  [1m[36mTRANSACTION (5.5ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m

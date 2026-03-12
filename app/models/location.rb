@@ -5,6 +5,7 @@ class Location < ApplicationRecord
 
   belongs_to :user
   has_many :feedback_submissions, dependent: :destroy
+  has_many :feedback_page_events, dependent: :destroy
   has_many :suggestions, dependent: :nullify
   has_many :opt_ins, dependent: :destroy
 

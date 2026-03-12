@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_19_000008) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_20_000002) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -53,6 +53,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_000008) do
     t.boolean "notify_on_new_optin", default: true, null: false
   end
 
+  create_table "feedback_page_events", force: :cascade do |t|
+    t.integer "location_id", null: false
+    t.string "event_type", null: false
+    t.integer "rating"
+    t.string "device_type"
+    t.string "country"
+    t.string "region"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["location_id", "event_type", "created_at"], name: "index_feedback_page_events_on_location_event_created"
+    t.index ["location_id"], name: "index_feedback_page_events_on_location_id"
+  end
+
   create_table "feedback_submissions", force: :cascade do |t|
     t.integer "location_id", null: false
     t.integer "rating", null: false
@@ -63,6 +76,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_000008) do
     t.boolean "contact_me", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "device_type"
+    t.string "country"
+    t.string "region"
     t.index ["location_id"], name: "index_feedback_submissions_on_location_id"
   end
 
@@ -152,6 +168,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_000008) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "feedback_page_events", "locations"
   add_foreign_key "feedback_submissions", "locations"
   add_foreign_key "locations", "users"
   add_foreign_key "opt_ins", "locations"

@@ -31,6 +31,8 @@ Rails.application.routes.draw do
 
       get "locations/public/:id", to: "locations#show_public", as: :location_public
       post "feedback", to: "feedback#create"
+      post "feedback/events", to: "feedback_events#create"
+      get "feedback/analytics", to: "feedback#analytics", defaults: { format: :json }
       post "suggestions", to: "suggestions#create"
       post "opt_ins", to: "opt_ins#create"
 

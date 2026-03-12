@@ -32,6 +32,10 @@ gem "aws-sdk-s3", require: false
 # SendGrid HTTP API (avoids SMTP port blocks on Railway)
 gem "sendgrid-actionmailer"
 
+# Device detection and IP geolocation for feedback analytics
+gem "device_detector"
+gem "geocoder"
+
 # Solid backend (Rails 8 default for cache, queue, cable)
 gem "solid_cache"
 gem "solid_queue"
