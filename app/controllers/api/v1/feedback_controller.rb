@@ -13,7 +13,8 @@ module Api
 
         page_views = events.where(event_type: "page_view").count
         star_clicks = events.where(event_type: "star_click").count
-        feedback_submits = submissions.count
+        # Only count rating submissions (rating 1-5) for funnel conversion; suggestions (rating 0) use a different flow
+        feedback_submits = submissions.where("rating >= 1").count
 
         device_breakdown = events.where(event_type: "page_view")
                                 .group("COALESCE(device_type, 'unknown')")
