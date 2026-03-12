@@ -2,8 +2,8 @@
 
 module Api
   module V1
-    class FeedbackEventsController < ApplicationController
-      skip_before_action :authenticate_user!
+    class FeedbackEventsController < BaseController
+      skip_before_action :authenticate_user!, only: [:create]
 
       def create
         location = Location.find_by(id: params[:location_id]) || Location.find_by(slug: params[:location_id])
