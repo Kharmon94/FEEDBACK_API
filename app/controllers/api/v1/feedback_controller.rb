@@ -7,7 +7,7 @@ module Api
 
       def analytics
         authorize! :read, FeedbackSubmission
-        location_ids = current_user.locations.pluck(:id)
+        location_ids = scoped_location_ids
         events = FeedbackPageEvent.where(location_id: location_ids)
         submissions = FeedbackSubmission.where(location_id: location_ids)
 
@@ -17,9 +17,14 @@ module Api
         end
 
         page_views = events.where(event_type: "page_view").count
-        star_clicks = events.where(event_type: "star_click").count
+        star_clicks_grouped = events.where(event_type: "star_click").group(:rating).count
+        star_clicks_by_rating = (1..5).index_with { |r| star_clicks_grouped[r] || 0 }
         # Only count rating submissions (rating 1-5) for funnel conversion; suggestions (rating 0) use a different flow
         feedback_submits = submissions.where("rating >= 1").count
+
+        opt_ins = OptIn.where(location_id: location_ids)
+        opt_ins = opt_ins.where("opt_ins.created_at >= ?", since_date) if since_date
+        opt_ins_count = opt_ins.count
 
         device_breakdown = events.where(event_type: "page_view")
                                 .group("COALESCE(device_type, 'unknown')")
@@ -33,7 +38,7 @@ module Api
                               .count
 
         render json: {
-          funnel: { page_views: page_views, star_clicks: star_clicks, submissions: feedback_submits },
+          funnel: { page_views: page_views, star_clicks_by_rating: star_clicks_by_rating, submissions: feedback_submits, opt_ins_count: opt_ins_count },
           device_breakdown: device_breakdown,
           top_countries: top_countries
         }, status: :ok
@@ -41,7 +46,9 @@ module Api
 
       def index
         authorize! :read, FeedbackSubmission
+        location_ids = scoped_location_ids
         submissions = FeedbackSubmission.joins(:location).includes(:location).where(locations: { user_id: current_user.id })
+        submissions = submissions.where(location_id: location_ids) if location_ids.present?
         submissions = submissions.where("feedback_submissions.created_at >= ?", since_date) if since_date
         submissions = submissions.order(created_at: :desc)
         render json: { feedback: submissions.map { |f| feedback_json(f) } }, status: :ok
@@ -71,15 +78,27 @@ module Api
 
       private
 
+      def scoped_location_ids
+        user_ids = current_user.locations.pluck(:id)
+        return user_ids unless params[:location_id].present?
+
+        loc_id = params[:location_id].to_s
+        loc_int = loc_id.match?(/\A\d+\z/) ? loc_id.to_i : nil
+        return user_ids unless loc_int
+
+        user_ids.include?(loc_int) ? [loc_int] : user_ids
+      end
+
       def since_date
         return nil unless params[:since].present?
         n = params[:since].to_s
         case n
-        when "7d"  then 7.days.ago
-        when "30d" then 30.days.ago
-        when "90d" then 90.days.ago
-        when "6m"  then 6.months.ago
-        when "1y"  then 1.year.ago
+        when "today" then Time.current.beginning_of_day
+        when "7d"    then 7.days.ago
+        when "30d"   then 30.days.ago
+        when "90d"   then 90.days.ago
+        when "6m"    then 6.months.ago
+        when "1y"    then 1.year.ago
         else nil
         end
       end
