@@ -35,7 +35,7 @@ module Api
 
       def index
         authorize! :read, FeedbackSubmission
-        submissions = FeedbackSubmission.joins(:location).where(locations: { user_id: current_user.id }).order(created_at: :desc)
+        submissions = FeedbackSubmission.joins(:location).includes(:location).where(locations: { user_id: current_user.id }).order(created_at: :desc)
         render json: { feedback: submissions.map { |f| feedback_json(f) } }, status: :ok
       end
 
@@ -101,6 +101,7 @@ module Api
         {
           id: f.id,
           location_id: f.location_id,
+          location_name: f.location&.name,
           rating: f.rating,
           comment: f.comment,
           customer_name: f.customer_name,
