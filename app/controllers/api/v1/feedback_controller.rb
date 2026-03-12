@@ -11,6 +11,11 @@ module Api
         events = FeedbackPageEvent.where(location_id: location_ids)
         submissions = FeedbackSubmission.where(location_id: location_ids)
 
+        if since_date
+          events = events.where("feedback_page_events.created_at >= ?", since_date)
+          submissions = submissions.where("feedback_submissions.created_at >= ?", since_date)
+        end
+
         page_views = events.where(event_type: "page_view").count
         star_clicks = events.where(event_type: "star_click").count
         # Only count rating submissions (rating 1-5) for funnel conversion; suggestions (rating 0) use a different flow
@@ -36,7 +41,9 @@ module Api
 
       def index
         authorize! :read, FeedbackSubmission
-        submissions = FeedbackSubmission.joins(:location).includes(:location).where(locations: { user_id: current_user.id }).order(created_at: :desc)
+        submissions = FeedbackSubmission.joins(:location).includes(:location).where(locations: { user_id: current_user.id })
+        submissions = submissions.where("feedback_submissions.created_at >= ?", since_date) if since_date
+        submissions = submissions.order(created_at: :desc)
         render json: { feedback: submissions.map { |f| feedback_json(f) } }, status: :ok
       end
 
@@ -63,6 +70,19 @@ module Api
       end
 
       private
+
+      def since_date
+        return nil unless params[:since].present?
+        n = params[:since].to_s
+        case n
+        when "7d"  then 7.days.ago
+        when "30d" then 30.days.ago
+        when "90d" then 90.days.ago
+        when "6m"  then 6.months.ago
+        when "1y"  then 1.year.ago
+        else nil
+        end
+      end
 
       def feedback_params
         params.permit(:rating, :comment, :customer_name, :customer_email, :phone_number, :contact_me)
