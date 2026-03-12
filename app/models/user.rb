@@ -41,6 +41,16 @@ class User < ApplicationRecord
     raw
   end
 
+  # Send confirmation to a new email (for email change flow). Mails to new_email.
+  def send_confirmation_instructions_for_new_email(new_email)
+    raw = SecureRandom.urlsafe_base64(32)
+    self.confirmation_token = Digest::SHA256.hexdigest(raw)
+    self.confirmation_sent_at = Time.current
+    save!(validate: false)
+    UserMailer.confirmation_instructions(self, raw, send_to: new_email).deliver_later
+    raw
+  end
+
   def self.find_by_confirmation_token(raw_token)
     return nil if raw_token.blank?
     digest = Digest::SHA256.hexdigest(raw_token)
@@ -49,6 +59,10 @@ class User < ApplicationRecord
 
   def confirm!
     self.confirmed_at = Time.current
+    if unconfirmed_email.present?
+      self.email = unconfirmed_email
+      self.unconfirmed_email = nil
+    end
     self.confirmation_token = nil
     self.confirmation_sent_at = nil
     save!(validate: false)

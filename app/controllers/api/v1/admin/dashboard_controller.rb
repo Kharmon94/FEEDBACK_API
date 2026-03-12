@@ -10,6 +10,8 @@ module Api
             active_users: User.where(suspended: false).count,
             total_locations: Location.count,
             total_feedback: FeedbackSubmission.count,
+            total_opt_ins: OptIn.count,
+            total_suggestions: Suggestion.count,
             avg_rating: FeedbackSubmission.average(:rating)&.round(1),
             recent_activity: recent_activity_items
           }, status: :ok
@@ -28,7 +30,15 @@ module Api
             msg = "New feedback (#{f.rating} stars) for #{f.location.name}"
             { type: "feedback", id: f.id.to_s, message: msg, created_at: f.created_at.iso8601, location_name: f.location.name, user_name: f.location.user.name }
           end
-          (users + locations + feedback).sort_by { |h| h[:created_at] }.reverse.first(10)
+          opt_ins = OptIn.includes(location: :user).order(created_at: :desc).limit(4).map do |o|
+            msg = "New opt-in: #{o.name.presence || o.email} for #{o.location.name}"
+            { type: "optin", id: o.id.to_s, message: msg, created_at: o.created_at.iso8601, location_name: o.location.name, user_name: o.location.user.name }
+          end
+          suggestions = Suggestion.includes(location: :user).order(created_at: :desc).limit(4).map do |s|
+            msg = "New suggestion for #{s.location.name}"
+            { type: "suggestion", id: s.id.to_s, message: msg, created_at: s.created_at.iso8601, location_name: s.location.name, user_name: s.location.user.name }
+          end
+          (users + locations + feedback + opt_ins + suggestions).sort_by { |h| h[:created_at] }.reverse.first(10)
         end
       end
     end

@@ -50,6 +50,9 @@ Rails.application.routes.draw do
         get :unsubscribe, on: :collection
       end
 
+      resource :profile, only: %i[show update], controller: "profiles"
+      put "profile/password", to: "profiles#change_password"
+
       namespace :admin do
         get "dashboard", to: "dashboard#index"
         resources :users, only: %i[index show create update] do
@@ -70,6 +73,9 @@ Rails.application.routes.draw do
         get "analytics", to: "analytics#index"
         get "analytics/export", to: "analytics#export"
         resources :suggestions, only: %i[index show] do
+          get :export, on: :collection
+        end
+        resources :opt_ins, only: %i[index show], path: "opt-ins" do
           get :export, on: :collection
         end
         get "settings", to: "settings#show"

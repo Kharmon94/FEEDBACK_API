@@ -80,12 +80,13 @@ class UserMailer < ApplicationMailer
     mail(to: user.email, subject: "Your Feedback Page account has been created")
   end
 
-  def confirmation_instructions(user, raw_token)
+  def confirmation_instructions(user, raw_token, send_to: nil)
     @user = user
     verification_url = confirm_email_url(raw_token)
     variables = { verification_url: verification_url }
     html = render_design_template("auth/email-verification", variables)
-    mail(to: user.email, subject: "Verify Your Email Address") do |format|
+    to_address = send_to.presence || user.email
+    mail(to: to_address, subject: "Verify Your Email Address") do |format|
       format.html { render html: html, layout: false }
     end
   end
