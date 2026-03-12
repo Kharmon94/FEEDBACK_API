@@ -6,7 +6,10 @@ module Api
       class LocationsController < BaseController
         def index
           locs = Location.includes(:user).order(created_at: :desc)
-          locs = locs.where(user_id: params[:user_id]) if params[:user_id].present?
+          if params[:user_id].present?
+            resolved_user = resolve_user_from_param(params[:user_id])
+            locs = resolved_user ? locs.where(user_id: resolved_user.id) : locs.where(user_id: nil)
+          end
           locs = locs.joins(:user).where("locations.name LIKE ? OR users.name LIKE ? OR users.email LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%") if params[:search].present?
           page = (params[:page] || 1).to_i
           per = (params[:per_page] || 50).to_i
@@ -19,12 +22,14 @@ module Api
         end
 
         def show
-          loc = Location.find(params[:id])
+          loc = resolve_location_from_param(params[:id])
+          return render json: { error: "Location not found" }, status: :not_found unless loc
           render json: admin_location_json(loc), status: :ok
         end
 
         def create
-          user = User.find(create_location_params[:user_id])
+          user = resolve_user_from_param(create_location_params[:user_id])
+          return render json: { error: "User not found" }, status: :not_found unless user
           location = user.locations.build(create_location_params.except(:user_id))
           if location.save
             render json: admin_location_json(location.reload), status: :created
@@ -48,8 +53,10 @@ module Api
         def admin_location_json(l)
           {
             id: l.id.to_s,
+            public_id: LocationIdObfuscator.encode(l.id),
             name: l.name,
             user_id: l.user_id.to_s,
+            user_public_id: UserIdObfuscator.encode(l.user_id),
             user_name: l.user.name,
             user_email: l.user.email,
             feedback_count: l.feedback_submissions.count,

@@ -66,6 +66,7 @@ module Api
           locs.map do |loc|
             {
               id: loc.id.to_s,
+              public_id: LocationIdObfuscator.encode(loc.id),
               name: loc.name,
               owner: users[loc.user_id]&.name,
               feedback_count: loc.feedback_count.to_i,
@@ -87,6 +88,7 @@ module Api
           top_users_relation.map do |u|
             {
               id: u.id.to_s,
+              public_id: UserIdObfuscator.encode(u.id),
               name: u.name,
               plan: u.plan,
               locations_count: u.locations_count.to_i

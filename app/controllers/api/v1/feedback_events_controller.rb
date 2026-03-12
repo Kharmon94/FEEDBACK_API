@@ -6,7 +6,7 @@ module Api
       skip_before_action :authenticate_user!, only: [:create]
 
       def create
-        location = Location.find_by(id: params[:location_id]) || Location.find_by(slug: params[:location_id])
+        location = resolve_location_from_param(params[:location_id])
         return head :not_found unless location
 
         event = location.feedback_page_events.build(

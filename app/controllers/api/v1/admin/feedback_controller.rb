@@ -6,8 +6,14 @@ module Api
       class FeedbackController < BaseController
         def index
           subs = FeedbackSubmission.includes(location: :user).order(created_at: :desc)
-          subs = subs.where(location_id: params[:location_id]) if params[:location_id].present?
-          subs = subs.joins(:location).where(locations: { user_id: params[:user_id] }) if params[:user_id].present?
+          if params[:location_id].present?
+            loc = resolve_location_from_param(params[:location_id])
+            subs = loc ? subs.where(location_id: loc.id) : subs.where(location_id: nil)
+          end
+          if params[:user_id].present?
+            usr = resolve_user_from_param(params[:user_id])
+            subs = usr ? subs.joins(:location).where(locations: { user_id: usr.id }) : subs.joins(:location).where(locations: { user_id: nil })
+          end
           subs = subs.where(rating: params[:rating]) if params[:rating].present?
           page = (params[:page] || 1).to_i
           per = (params[:per_page] || 50).to_i
@@ -42,8 +48,10 @@ module Api
             rating: f.rating,
             comment: f.comment,
             location_id: f.location_id.to_s,
+            location_public_id: LocationIdObfuscator.encode(f.location_id),
             location_name: f.location.name,
             user_id: f.location.user_id.to_s,
+            user_public_id: UserIdObfuscator.encode(f.location.user_id),
             user_name: f.location.user.name,
             user_email: f.location.user.email,
             created_at: f.created_at.iso8601,

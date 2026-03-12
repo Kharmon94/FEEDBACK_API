@@ -20,7 +20,8 @@ module Api
         end
 
         def show
-          user = User.find(params[:id])
+          user = resolve_user_from_param(params[:id])
+          return render json: { error: "User not found" }, status: :not_found unless user
           render json: admin_user_json(user), status: :ok
         end
 
@@ -39,21 +40,24 @@ module Api
         end
 
         def suspend
-          user = User.find(params[:id])
+          user = resolve_user_from_param(params[:id])
+          return render json: { error: "User not found" }, status: :not_found unless user
           user.update!(suspended: true)
           UserMailer.account_suspended(user).deliver_later
           render json: { success: true, message: "User suspended successfully" }, status: :ok
         end
 
         def activate
-          user = User.find(params[:id])
+          user = resolve_user_from_param(params[:id])
+          return render json: { error: "User not found" }, status: :not_found unless user
           user.update!(suspended: false)
           UserMailer.account_activated(user).deliver_later
           render json: { success: true, message: "User activated successfully" }, status: :ok
         end
 
         def update
-          user = User.find(params[:id])
+          user = resolve_user_from_param(params[:id])
+          return render json: { error: "User not found" }, status: :not_found unless user
           if params.key?(:admin) && params[:admin] == false
             if user.id == current_user.id
               return render json: { error: "Cannot revoke your own admin access." }, status: :unprocessable_entity
@@ -94,6 +98,7 @@ module Api
         def admin_user_json(u)
           {
             id: u.id.to_s,
+            public_id: UserIdObfuscator.encode(u.id),
             name: u.name,
             email: u.email,
             plan: u.plan,

@@ -28,7 +28,7 @@ module Api
 
       def create
         authorize! :create, OptIn
-        location = Location.find_by(id: params[:location_id]) || Location.find_by(slug: params[:location_id])
+        location = resolve_location_from_param(params[:location_id])
         return render json: { error: "Location not found" }, status: :not_found unless location
 
         opt_in = location.opt_ins.build(opt_in_params)

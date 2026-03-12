@@ -50,7 +50,7 @@ module Api
       end
 
       def show_public
-        loc = Location.find_by(id: params[:id]) || Location.find_by(slug: params[:id])
+        loc = resolve_location_from_param(params[:id])
         return render json: { error: "Location not found" }, status: :not_found unless loc
         render json: { location: location_public_json(loc) }, status: :ok
       end
@@ -58,7 +58,9 @@ module Api
       private
 
       def set_location
-        @location = current_user.locations.find(params[:id])
+        loc = resolve_location_from_param(params[:id])
+        @location = loc && loc.user_id == current_user.id ? loc : nil
+        raise ActiveRecord::RecordNotFound unless @location
       end
 
       def location_params
@@ -74,6 +76,7 @@ module Api
       def location_json(l)
         {
           id: l.id,
+          public_id: LocationIdObfuscator.encode(l.id),
           name: l.name,
           slug: l.slug,
           address: l.address,
@@ -91,6 +94,7 @@ module Api
       def location_public_json(l)
         {
           id: l.id,
+          public_id: LocationIdObfuscator.encode(l.id),
           name: l.name,
           address: l.address,
           phone: l.phone,

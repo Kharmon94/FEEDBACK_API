@@ -6,8 +6,14 @@ module Api
       class SuggestionsController < BaseController
         def index
           sugg = Suggestion.includes(location: :user).order(created_at: :desc)
-          sugg = sugg.where(location_id: params[:location_id]) if params[:location_id].present?
-          sugg = sugg.joins(:location).where(locations: { user_id: params[:user_id] }) if params[:user_id].present?
+          if params[:location_id].present?
+            loc = resolve_location_from_param(params[:location_id])
+            sugg = loc ? sugg.where(location_id: loc.id) : sugg.where(location_id: nil)
+          end
+          if params[:user_id].present?
+            usr = resolve_user_from_param(params[:user_id])
+            sugg = usr ? sugg.joins(:location).where(locations: { user_id: usr.id }) : sugg.joins(:location).where(locations: { user_id: nil })
+          end
           page = (params[:page] || 1).to_i
           per = (params[:per_page] || 50).to_i
           total = sugg.count
@@ -51,8 +57,10 @@ module Api
             content: s.content,
             submitter_email: s.submitter_email,
             location_id: s.location_id&.to_s,
+            location_public_id: s.location_id ? LocationIdObfuscator.encode(s.location_id) : nil,
             location_name: s.location&.name,
             user_id: s.location&.user_id&.to_s,
+            user_public_id: s.location&.user_id ? UserIdObfuscator.encode(s.location.user_id) : nil,
             user_name: s.location&.user&.name,
             user_email: s.location&.user&.email,
             created_at: s.created_at.iso8601

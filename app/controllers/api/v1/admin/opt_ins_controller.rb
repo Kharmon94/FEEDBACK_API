@@ -6,8 +6,14 @@ module Api
       class OptInsController < BaseController
         def index
           opt_ins = OptIn.includes(location: :user).order(created_at: :desc)
-          opt_ins = opt_ins.where(location_id: params[:location_id]) if params[:location_id].present?
-          opt_ins = opt_ins.joins(:location).where(locations: { user_id: params[:user_id] }) if params[:user_id].present?
+          if params[:location_id].present?
+            loc = resolve_location_from_param(params[:location_id])
+            opt_ins = loc ? opt_ins.where(location_id: loc.id) : opt_ins.where(location_id: nil)
+          end
+          if params[:user_id].present?
+            usr = resolve_user_from_param(params[:user_id])
+            opt_ins = usr ? opt_ins.joins(:location).where(locations: { user_id: usr.id }) : opt_ins.joins(:location).where(locations: { user_id: nil })
+          end
           page = (params[:page] || 1).to_i
           per = (params[:per_page] || 50).to_i
           total = opt_ins.count
@@ -26,8 +32,14 @@ module Api
         def export
           require "csv"
           opt_ins = OptIn.includes(location: :user).order(created_at: :desc)
-          opt_ins = opt_ins.where(location_id: params[:location_id]) if params[:location_id].present?
-          opt_ins = opt_ins.joins(:location).where(locations: { user_id: params[:user_id] }) if params[:user_id].present?
+          if params[:location_id].present?
+            loc = resolve_location_from_param(params[:location_id])
+            opt_ins = loc ? opt_ins.where(location_id: loc.id) : opt_ins.where(location_id: nil)
+          end
+          if params[:user_id].present?
+            usr = resolve_user_from_param(params[:user_id])
+            opt_ins = usr ? opt_ins.joins(:location).where(locations: { user_id: usr.id }) : opt_ins.joins(:location).where(locations: { user_id: nil })
+          end
           csv = CSV.generate(headers: true) do |row|
             row << %w[id name email phone rating location_id location_name user_id created_at]
             opt_ins.each do |o|
@@ -57,8 +69,10 @@ module Api
             phone: o.phone,
             rating: o.rating,
             location_id: o.location_id&.to_s,
+            location_public_id: o.location_id ? LocationIdObfuscator.encode(o.location_id) : nil,
             location_name: o.location&.name,
             user_id: o.location&.user_id&.to_s,
+            user_public_id: o.location&.user_id ? UserIdObfuscator.encode(o.location.user_id) : nil,
             user_name: o.location&.user&.name,
             user_email: o.location&.user&.email,
             created_at: o.created_at.iso8601

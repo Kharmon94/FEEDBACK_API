@@ -26,7 +26,10 @@ module Api
 
       def create
         authorize! :create, Suggestion
-        suggestion = Suggestion.new(suggestion_params)
+        location = resolve_location_from_param(params[:location_id])
+        return render json: { error: "Location not found" }, status: :not_found unless location
+
+        suggestion = Suggestion.new(suggestion_params.except(:location_id).merge(location_id: location.id))
         if suggestion.save
           owner = suggestion.location&.user
           if owner.present? && AdminSetting.instance.notify_on_new_suggestion && owner.email_notifications_enabled?
