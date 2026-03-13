@@ -1125,3 +1125,45 @@ FOREIGN KEY ("location_id")
   [1m[36mActiveRecord::SchemaMigration Create (3.9ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260220000002') RETURNING "version"[0m
   [1m[36mTRANSACTION (5.5ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
   [1m[36mActiveRecord::SchemaMigration Load (1.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (4.4ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to AddStripePriceIdsToPlans (20260221000001)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (2.3ms)[0m  [1m[35mALTER TABLE "plans" ADD "stripe_price_id_monthly" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "plans" ADD "stripe_price_id_yearly" varchar[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260221000001') RETURNING "version"[0m
+  [1m[36mTRANSACTION (10.0ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+Migrating to AddStripeFieldsToUsers (20260221000002)
+  [1m[36mTRANSACTION (2.5ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (3.8ms)[0m  [1m[35mALTER TABLE "users" ADD "stripe_customer_id" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "users" ADD "stripe_subscription_id" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "users" ADD "subscription_status" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "users" ADD "subscription_ends_at" datetime(6)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_users_on_stripe_customer_id" ON "users" ("stripe_customer_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_users_on_stripe_subscription_id" ON "users" ("stripe_subscription_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260221000002') RETURNING "version"[0m
+  [1m[36mTRANSACTION (2.2ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (5.3ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to AddStripeLiveModeToAdminSettings (20260222000001)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (2.6ms)[0m  [1m[35mALTER TABLE "admin_settings" ADD "stripe_live_mode" boolean DEFAULT 0 NOT NULL[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260222000001') RETURNING "version"[0m
+  [1m[36mTRANSACTION (8.1ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+Migrating to AddStripeLivePriceIdsToPlans (20260222000002)
+  [1m[36mTRANSACTION (2.6ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (3.8ms)[0m  [1m[35mALTER TABLE "plans" ADD "stripe_price_id_monthly_live" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "plans" ADD "stripe_price_id_yearly_live" varchar[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260222000002') RETURNING "version"[0m
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (4.4ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to AddStripeCustomerIdLiveToUsers (20260223000001)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (2.8ms)[0m  [1m[35mALTER TABLE "users" ADD "stripe_customer_id_live" varchar[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_users_on_stripe_customer_id_live" ON "users" ("stripe_customer_id_live")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260223000001') RETURNING "version"[0m
+  [1m[36mTRANSACTION (8.1ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m

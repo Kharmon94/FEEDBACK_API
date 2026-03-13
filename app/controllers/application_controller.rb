@@ -14,4 +14,9 @@ class ApplicationController < ActionController::API
   def current_user
     nil
   end
+
+  def frontend_origin
+    origin = (ENV["FRONTEND_ORIGIN"].presence || ENV["API_ORIGIN"].presence || "https://www.feedback-page.com").to_s
+    origin.gsub(%r{/$}, "")
+  end
 end

@@ -11,7 +11,9 @@ module Api
 
         def update
           s = AdminSetting.instance
-          s.update!(settings_params)
+          params_to_update = settings_params.to_h
+          params_to_update[:stripe_live_mode] = ActiveModel::Type::Boolean.new.cast(params_to_update[:stripe_live_mode]) if params_to_update.key?(:stripe_live_mode)
+          s.update!(params_to_update)
           render json: { success: true, message: "Settings updated successfully", settings: settings_json(s) }, status: :ok
         end
 
@@ -27,7 +29,8 @@ module Api
             :enable_social_login,
             :notify_on_new_feedback,
             :notify_on_new_suggestion,
-            :notify_on_new_optin
+            :notify_on_new_optin,
+            :stripe_live_mode
           )
         end
 
@@ -41,7 +44,8 @@ module Api
             enable_social_login: record.enable_social_login,
             notify_on_new_feedback: record.notify_on_new_feedback,
             notify_on_new_suggestion: record.notify_on_new_suggestion,
-            notify_on_new_optin: record.respond_to?(:notify_on_new_optin) ? record.notify_on_new_optin : true
+            notify_on_new_optin: record.respond_to?(:notify_on_new_optin) ? record.notify_on_new_optin : true,
+            stripe_live_mode: record.respond_to?(:stripe_live_mode) ? record.stripe_live_mode : false
           }
         end
       end

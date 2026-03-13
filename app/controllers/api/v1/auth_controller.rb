@@ -135,7 +135,7 @@ module Api
           admin: u.admin,
           created_at: u.created_at&.iso8601,
           trial_ends_at: trial_ends_at&.iso8601,
-          has_payment_method: u.plan != "free"
+          has_payment_method: (u.plan != "free") || (u.stripe_subscription_id.present? && %w[active trialing].include?(u.subscription_status.to_s))
         }
       end
 

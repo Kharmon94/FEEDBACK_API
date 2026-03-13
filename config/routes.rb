@@ -48,6 +48,10 @@ Rails.application.routes.draw do
 
       get "plans", to: "plans#index"
 
+      post "checkout/create_session", to: "checkout#create_session"
+      post "portal/create_session", to: "portal#create_session"
+      post "webhooks/stripe", to: "webhooks/stripe#create"
+
       resource :email_preferences, only: %i[show update], path: "email-preferences" do
         get :unsubscribe, on: :collection
       end

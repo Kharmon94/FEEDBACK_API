@@ -11,7 +11,8 @@ class AdminSetting < ApplicationRecord
       enable_social_login: true,
       notify_on_new_feedback: true,
       notify_on_new_suggestion: true,
-      notify_on_new_optin: true
+      notify_on_new_optin: true,
+      stripe_live_mode: false
     )
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_20_000002) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_23_000001) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -51,6 +51,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_20_000002) do
     t.boolean "notify_on_new_feedback", default: true, null: false
     t.boolean "notify_on_new_suggestion", default: true, null: false
     t.boolean "notify_on_new_optin", default: true, null: false
+    t.boolean "stripe_live_mode", default: false, null: false
   end
 
   create_table "feedback_page_events", force: :cascade do |t|
@@ -126,6 +127,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_20_000002) do
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "stripe_price_id_monthly"
+    t.string "stripe_price_id_yearly"
+    t.string "stripe_price_id_monthly_live"
+    t.string "stripe_price_id_yearly_live"
     t.index ["active"], name: "index_plans_on_active"
     t.index ["display_order"], name: "index_plans_on_display_order"
     t.index ["slug"], name: "index_plans_on_slug", unique: true
@@ -161,9 +166,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_20_000002) do
     t.string "unconfirmed_email"
     t.boolean "email_notifications_enabled", default: true, null: false
     t.boolean "email_marketing_opt_out", default: false, null: false
+    t.string "stripe_customer_id"
+    t.string "stripe_subscription_id"
+    t.string "subscription_status"
+    t.datetime "subscription_ends_at"
+    t.string "stripe_customer_id_live"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["stripe_customer_id"], name: "index_users_on_stripe_customer_id"
+    t.index ["stripe_customer_id_live"], name: "index_users_on_stripe_customer_id_live"
+    t.index ["stripe_subscription_id"], name: "index_users_on_stripe_subscription_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

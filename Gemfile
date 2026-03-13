@@ -39,6 +39,9 @@ gem "geocoder"
 # URL-safe ID obfuscation for public links
 gem "sqids"
 
+# Subscription billing
+gem "stripe"
+
 # Solid backend (Rails 8 default for cache, queue, cable)
 gem "solid_cache"
 gem "solid_queue"
