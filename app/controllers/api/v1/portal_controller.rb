@@ -3,7 +3,7 @@
 module Api
   module V1
     class PortalController < BaseController
-      include Concerns::StripeMode
+      include ::Concerns::StripeMode
 
       def create_session
         return render json: { error: "Stripe is not configured" }, status: :service_unavailable unless stripe_configured?
