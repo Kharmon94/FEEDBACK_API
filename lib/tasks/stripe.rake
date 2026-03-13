@@ -4,11 +4,38 @@ namespace :stripe do
   desc "Sync plans to Stripe: create Products and Prices. Use mode=test (default) or mode=live. Example: rake stripe:sync_plans mode=live"
   task sync_plans: :environment do
     live_mode = ENV["mode"].to_s.downcase == "live"
-    api_key = live_mode ? ENV["STRIPE_SECRET_KEY_LIVE"] : ENV["STRIPE_SECRET_KEY"]
     mode_label = live_mode ? "live" : "test"
+
+    creds = Rails.application.credentials
+    api_key = if live_mode
+      ENV["STRIPE_SECRET_KEY_LIVE"].presence ||
+        creds.dig(:stripe, :secret_key_live)&.to_s.presence ||
+        creds.dig(:stripe_secret_key_live)&.to_s.presence ||
+        creds["STRIPE_SECRET_KEY_LIVE"]&.to_s.presence ||
+        creds[:STRIPE_SECRET_KEY_LIVE]&.to_s.presence
+    else
+      ENV["STRIPE_SECRET_KEY"].presence ||
+        creds.dig(:stripe, :secret_key)&.to_s.presence ||
+        creds.dig(:stripe, :secret_key_test)&.to_s.presence ||
+        creds.dig(:stripe_secret_key)&.to_s.presence ||
+        creds["STRIPE_SECRET_KEY"]&.to_s.presence ||
+        creds[:STRIPE_SECRET_KEY]&.to_s.presence
+    end
 
     unless api_key.present?
       puts "ERROR: STRIPE_SECRET_KEY#{live_mode ? '_LIVE' : ''} is not set. Cannot sync plans for #{mode_label} mode."
+      puts ""
+      puts "Option 1: Set the env var before running:"
+      puts "  STRIPE_SECRET_KEY=sk_test_xxx bundle exec rake stripe:sync_plans"
+      puts ""
+      puts "Option 2: Add to Rails credentials (rails credentials:edit):"
+      puts "  stripe:"
+      puts "    secret_key: sk_test_xxxx"
+      puts "    secret_key_live: sk_live_xxxx"
+      puts ""
+      puts "Option 3: Use top-level keys in credentials:"
+      puts "  stripe_secret_key: sk_test_xxxx"
+      puts "  stripe_secret_key_live: sk_live_xxxx"
       exit 1
     end
 

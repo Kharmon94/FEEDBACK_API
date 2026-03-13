@@ -1167,3 +1167,5 @@ Migrating to AddStripeCustomerIdLiveToUsers (20260223000001)
   [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260223000001') RETURNING "version"[0m
   [1m[36mTRANSACTION (8.1ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
   [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mPlan Load (0.7ms)[0m  [1m[34mSELECT "plans".* FROM "plans" WHERE "plans"."active" = ? AND "plans"."slug" NOT IN (?, ?) ORDER BY "plans"."id" ASC LIMIT ?[0m  [["active", 1], ["slug", "free"], ["slug", "enterprise"], ["LIMIT", 1000]]
+  ↳ lib/tasks/stripe.rake:49:in `block (2 levels) in <main>'
