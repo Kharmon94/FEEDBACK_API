@@ -75,12 +75,13 @@ module Api
           plan_name = subscription.metadata&.plan_slug || user.plan
 
           User.transaction do
-            user.update!(
+            attrs = {
               plan: "free",
               stripe_subscription_id: nil,
-              subscription_status: "canceled",
-              subscription_ends_at: Time.at(subscription.ended_at) if subscription.ended_at
-            )
+              subscription_status: "canceled"
+            }
+            attrs[:subscription_ends_at] = Time.at(subscription.ended_at) if subscription.ended_at
+            user.update!(attrs)
           end
 
           BillingMailer.subscription_cancelled(

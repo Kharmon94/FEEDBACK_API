@@ -3,7 +3,7 @@
 module Api
   module V1
     class CheckoutController < BaseController
-      include ::Concerns::StripeMode
+      include StripeMode
 
       def create_session
         plan_slug = params[:plan_slug].to_s.presence
