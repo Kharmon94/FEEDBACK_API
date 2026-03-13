@@ -96,14 +96,21 @@ module Api
           livemode ? ENV["STRIPE_SECRET_KEY_LIVE"].presence : ENV["STRIPE_SECRET_KEY"].presence
         end
 
+        def subscription_id_from_invoice(invoice)
+          invoice["subscription"].presence ||
+            invoice.dig("parent", "subscription_details", "subscription").presence ||
+            invoice.lines&.data&.first&.dig("parent", "subscription_item_details", "subscription").presence
+        end
+
         def handle_invoice_paid(invoice)
-          return unless invoice.subscription.present?
+          sub_id = subscription_id_from_invoice(invoice)
+          return unless sub_id.present?
 
           user = find_user_by_customer(invoice.customer)
           return unless user
 
           opts = { api_key: stripe_api_key_for_livemode(invoice.livemode) }.compact
-          subscription = opts[:api_key] ? (Stripe::Subscription.retrieve(invoice.subscription, opts) rescue nil) : nil
+          subscription = opts[:api_key] ? (Stripe::Subscription.retrieve(sub_id, opts) rescue nil) : nil
           plan_slug = subscription&.metadata&.plan_slug
           price_id = invoice.lines&.data&.first&.price&.id
           plan_slug ||= Plan.find_by(stripe_price_id_monthly: price_id)&.slug || Plan.find_by(stripe_price_id_yearly: price_id)&.slug ||
@@ -143,8 +150,9 @@ module Api
           user = find_user_by_customer(invoice.customer)
           return unless user
 
+          sub_id = subscription_id_from_invoice(invoice)
           opts = { api_key: stripe_api_key_for_livemode(invoice.livemode) }.compact
-          subscription = invoice.subscription.present? && opts[:api_key] ? (Stripe::Subscription.retrieve(invoice.subscription, opts) rescue nil) : nil
+          subscription = sub_id.present? && opts[:api_key] ? (Stripe::Subscription.retrieve(sub_id, opts) rescue nil) : nil
           plan_slug = subscription&.metadata&.plan_slug
           plan_name = Plan.find_by(slug: plan_slug)&.name || plan_slug&.titleize || "Subscription"
 
