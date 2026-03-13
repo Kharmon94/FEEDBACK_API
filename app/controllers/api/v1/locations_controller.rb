@@ -24,9 +24,10 @@ module Api
         if limit.present? && current_user.locations.count >= limit
           return render json: { error: "Location limit reached for your plan. Please upgrade to add more locations." }, status: :forbidden
         end
+        logo_file = params[:logo] || params.dig(:location, :logo)
         location = current_user.locations.build(location_params.except(:logo))
         if location.save
-          location.logo.attach(params[:logo]) if params[:logo].present?
+          location.logo.attach(logo_file) if logo_file.present?
           render json: { location: location_json(location) }, status: :created
         else
           render json: { error: location.errors.full_messages }, status: :unprocessable_entity
@@ -35,7 +36,8 @@ module Api
 
       def update
         authorize! :update, @location
-        @location.logo.attach(params[:logo]) if params[:logo].present?
+        logo_file = params[:logo] || params.dig(:location, :logo)
+        @location.logo.attach(logo_file) if logo_file.present?
         if @location.update(location_params.except(:logo))
           render json: { location: location_json(@location) }, status: :ok
         else
@@ -64,7 +66,8 @@ module Api
       end
 
       def location_params
-        params.permit(
+        source = params[:location].present? ? params[:location] : params
+        source.permit(
           :name, :address, :phone, :email, :logo_url, :logo,
           :custom_message, :email_notifications,
           review_platforms: {},

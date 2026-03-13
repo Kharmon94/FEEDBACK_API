@@ -30,7 +30,7 @@ class OptInMailer < ApplicationMailer
     @location = opt_in.location
     return if @location.blank?
 
-    # Unsubscribe URL - placeholder until location-specific opt-out is implemented
+    # Unsubscribe goes to global email preferences (one list per user). Location-specific opt-out not implemented.
     unsubscribe_url = "#{frontend_origin}/email-preferences"
 
     variables = {

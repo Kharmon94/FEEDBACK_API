@@ -59,6 +59,10 @@ Rails.application.routes.draw do
       resource :profile, only: %i[show update], controller: "profiles"
       put "profile/password", to: "profiles#change_password"
 
+      post "contact", to: "contact#create"
+
+      post "cron/trial_reminders", to: "cron#trial_reminders"
+
       namespace :admin do
         get "dashboard", to: "dashboard#index"
         resources :users, only: %i[index show create update] do
