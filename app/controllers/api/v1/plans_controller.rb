@@ -6,6 +6,7 @@ module Api
       skip_before_action :authenticate_user!
 
       def index
+        authorize! :read, Plan
         plans = Plan.active.ordered
         render json: { plans: plans.map { |p| plan_json(p) } }, status: :ok
       end

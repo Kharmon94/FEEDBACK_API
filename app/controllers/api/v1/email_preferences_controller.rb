@@ -7,6 +7,7 @@ module Api
       before_action :verify_unsubscribe_token, only: %i[unsubscribe]
 
       def show
+        authorize! :read, :email_preferences
         render json: {
           email_notifications_enabled: current_user.email_notifications_enabled?,
           email_marketing_opt_out: current_user.email_marketing_opted_out?
@@ -14,6 +15,7 @@ module Api
       end
 
       def update
+        authorize! :update, :email_preferences
         current_user.assign_attributes(email_preferences_params)
         if current_user.save
           render json: {

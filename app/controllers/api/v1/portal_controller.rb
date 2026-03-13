@@ -6,6 +6,7 @@ module Api
       include StripeMode
 
       def create_session
+        authorize! :create, :billing_portal_session
         return render json: { error: "Stripe is not configured" }, status: :service_unavailable unless stripe_configured?
 
         customer_id = stripe_customer_id_for_user(current_user)

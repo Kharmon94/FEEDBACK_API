@@ -6,6 +6,7 @@ module Api
       include StripeMode
 
       def create_session
+        authorize! :create, :checkout_session
         plan_slug = params[:plan_slug].to_s.presence
         billing_period = params[:billing_period].to_s.presence
         billing_period = "monthly" unless %w[monthly yearly].include?(billing_period)

@@ -4,10 +4,12 @@ module Api
   module V1
     class ProfilesController < BaseController
       def show
+        authorize! :read, current_user
         render json: profile_json(current_user), status: :ok
       end
 
       def update
+        authorize! :update, current_user
         if profile_params.key?(:email) && profile_params[:email] != current_user.email
           handle_email_change
         else
@@ -16,6 +18,7 @@ module Api
       end
 
       def change_password
+        authorize! :update, current_user
         if current_user.provider.present?
           return render json: { error: "Password cannot be changed for accounts signed in with Google." }, status: :unprocessable_entity
         end
