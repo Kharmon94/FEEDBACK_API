@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class UserIdObfuscator
-  DEFAULT_ALPHABET = "k3G5QA7m9BxpqR2sT4vW6yZ8cD0eF1hJaLbMnPoSrTuVwX"
+  # Must have unique chars (Sqids requirement). Replaced duplicate T with i.
+  DEFAULT_ALPHABET = "k3G5QA7m9BxpqR2sT4vW6yZ8cD0eF1hJaLbMnPoSriuVwX"
   ALPHABET = (ENV["SQIDS_USER_ALPHABET"].presence || DEFAULT_ALPHABET).freeze
 
   def self.encode(id)
