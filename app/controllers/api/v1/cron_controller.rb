@@ -3,7 +3,6 @@
 module Api
   module V1
     class CronController < ApplicationController
-      skip_before_action :verify_authenticity_token
       before_action :verify_cron_secret
 
       def trial_reminders
