@@ -60,6 +60,8 @@ module Api
             user_name: l.user.name,
             user_email: l.user.email,
             feedback_count: l.feedback_submissions.count,
+            suggestions_count: l.suggestions.count,
+            opt_ins_count: l.opt_ins.count,
             avg_rating: l.feedback_submissions.average(:rating)&.round(1),
             created_at: l.created_at.iso8601
           }

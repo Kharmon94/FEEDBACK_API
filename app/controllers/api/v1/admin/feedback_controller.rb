@@ -14,7 +14,17 @@ module Api
             usr = resolve_user_from_param(params[:user_id])
             subs = usr ? subs.joins(:location).where(locations: { user_id: usr.id }) : subs.joins(:location).where(locations: { user_id: nil })
           end
-          subs = subs.where(rating: params[:rating]) if params[:rating].present?
+          if params[:rating].present?
+            case params[:rating].to_s.downcase
+            when "positive"
+              subs = subs.where("rating >= ?", 4)
+            when "negative"
+              subs = subs.where("rating <= ?", 2)
+            else
+              num = params[:rating].to_s.to_i
+              subs = subs.where(rating: num) if num.between?(1, 5)
+            end
+          end
           page = (params[:page] || 1).to_i
           per = (params[:per_page] || 50).to_i
           total = subs.count

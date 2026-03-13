@@ -106,6 +106,8 @@ module Api
             status: u.suspended? ? "suspended" : "active",
             locations_count: u.locations.count,
             feedback_count: u.feedback_submissions.count,
+            suggestions_count: u.suggestions.count,
+            opt_ins_count: u.opt_ins.count,
             created_at: u.created_at.iso8601
           }
         end

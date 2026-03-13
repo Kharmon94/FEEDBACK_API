@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :locations, dependent: :destroy
   has_many :feedback_submissions, through: :locations
   has_many :suggestions, through: :locations
+  has_many :opt_ins, through: :locations
 
   validates :email, presence: true, uniqueness: true
 
