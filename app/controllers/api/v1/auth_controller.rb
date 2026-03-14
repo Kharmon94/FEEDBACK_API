@@ -125,17 +125,18 @@ module Api
 
       def user_json(u)
         return nil if u.nil?
-        trial_ends_at = (u.plan == "free" && u.created_at) ? (u.created_at + 30.days) : nil
+        ep = u.respond_to?(:effective_plan) ? u.effective_plan : u.plan
+        trial_ends_at = (ep == "free" && u.created_at) ? (u.created_at + 30.days) : nil
         {
           id: u.id,
           email: u.email,
           name: u.name,
           business_name: u.business_name,
-          plan: u.plan,
+          plan: ep,
           admin: u.admin,
           created_at: u.created_at&.iso8601,
           trial_ends_at: trial_ends_at&.iso8601,
-          has_payment_method: (u.plan != "free") || (u.stripe_subscription_id.present? && %w[active trialing].include?(u.subscription_status.to_s))
+          has_payment_method: (ep != "free") || (u.stripe_subscription_id.present? && %w[active trialing].include?(u.subscription_status.to_s))
         }
       end
 

@@ -56,7 +56,7 @@ Rails.application.routes.draw do
         get :unsubscribe, on: :collection
       end
 
-      resource :profile, only: %i[show update], controller: "profiles"
+      resource :profile, only: %i[show update destroy], controller: "profiles"
       put "profile/password", to: "profiles#change_password"
 
       post "contact", to: "contact#create"

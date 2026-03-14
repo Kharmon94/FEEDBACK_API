@@ -83,4 +83,9 @@ class User < ApplicationRecord
     payload = { user_id: id, exp: 7.days.from_now.to_i }
     Rails.application.message_verifier(:email_unsubscribe).generate(payload)
   end
+
+  def effective_plan
+    return plan if subscription_ends_at.blank?
+    subscription_ends_at > Time.current ? plan : "free"
+  end
 end
